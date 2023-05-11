@@ -8,19 +8,19 @@ total number of bet amount --> winner
 */
 import "hardhat/console.sol";
 
-contract Receiver {
-    event ValueReceived(address user, uint amount);
+// contract Receiver {
+//     event ValueReceived(address user, uint amount);
     
-    receive() external payable {
-        emit ValueReceived(msg.sender, msg.value);
-    }
-}
+//     receive() external payable {
+//         emit ValueReceived(msg.sender, msg.value);
+//     }
+// }
 
 contract Storage  {
-    mapping (address => uint) userBet;
-    mapping (uint => address) horseBettor; 
+    mapping (address => uint) public userBet;
+    mapping (uint => address) public horseBettor; 
     address[] public  totalUsers; // map
-    uint totalAmount;
+    uint public totalAmount;
     uint public immutable HORSES;
 
     function registerUser(address _user, uint _betAmount, uint _horse) public {
