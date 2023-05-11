@@ -1045,7 +1045,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"horse_betting/token.sol": "Horse_Bet"
+			"token.sol": "Horse_Bet"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -1243,7 +1243,7 @@
 				"dweb:/ipfs/QmNNCeng6d5eRPDn6tkWSQhjE39XWfQEfjA63rRwHmr1iH"
 			]
 		},
-		"horse_betting/token.sol": {
+		"token.sol": {
 			"keccak256": "0xddef68e3cedc82d5302259963b2aea9c77e7e710f7508b0a9840760dbe85b0eb",
 			"license": "MIT",
 			"urls": [

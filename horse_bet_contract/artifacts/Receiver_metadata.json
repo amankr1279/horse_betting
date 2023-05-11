@@ -42,7 +42,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"horse_betting/storage.sol": "Receiver"
+			"storage.sol": "Receiver"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -64,12 +64,12 @@
 				"dweb:/ipfs/QmfTY1qzPt5C63Wc7y6JqfZr5899NRvXYdCpyLzR5FXQic"
 			]
 		},
-		"horse_betting/storage.sol": {
-			"keccak256": "0x3884a9f96d0e1ceac3707745009c9e584f0e6889f5dd431561f9685942e2079f",
+		"storage.sol": {
+			"keccak256": "0x472a3440770b6e16866136278b8484cfa7667eaada6ae83d0c67ed4a80ed22b4",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09917d65764dc428daf361b3fdde1b9eef4fa3635d2656bc5c53fa90ee79e00b",
-				"dweb:/ipfs/Qmdcmc6TAonihKuotRLAiWN8jkCzGfsCzqGAmkhEeMsS7k"
+				"bzz-raw://9c3475249cb23d041eb9b159bcad06ee1fb25c8b967a21020bba096792e9317c",
+				"dweb:/ipfs/QmdMnQZyAF8SuCkshFsgoPoeBR2ARTQEWk9CDQSSPHcCz5"
 			]
 		}
 	},

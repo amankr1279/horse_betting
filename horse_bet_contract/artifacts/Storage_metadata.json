@@ -24,6 +24,25 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "horseBettor",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "pickWinner",
 				"outputs": [
@@ -78,6 +97,19 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "totalAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -91,6 +123,25 @@
 						"internalType": "address",
 						"name": "",
 						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "userBet",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
 					}
 				],
 				"stateMutability": "view",
@@ -110,7 +161,7 @@
 	},
 	"settings": {
 		"compilationTarget": {
-			"horse_betting/storage.sol": "Storage"
+			"storage.sol": "Storage"
 		},
 		"evmVersion": "paris",
 		"libraries": {},
@@ -132,12 +183,12 @@
 				"dweb:/ipfs/QmfTY1qzPt5C63Wc7y6JqfZr5899NRvXYdCpyLzR5FXQic"
 			]
 		},
-		"horse_betting/storage.sol": {
-			"keccak256": "0x3884a9f96d0e1ceac3707745009c9e584f0e6889f5dd431561f9685942e2079f",
+		"storage.sol": {
+			"keccak256": "0xbf3a665cc85fa004c895f30efdd9b637b67a05928c82746424aca0b3b8dbf05f",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://09917d65764dc428daf361b3fdde1b9eef4fa3635d2656bc5c53fa90ee79e00b",
-				"dweb:/ipfs/Qmdcmc6TAonihKuotRLAiWN8jkCzGfsCzqGAmkhEeMsS7k"
+				"bzz-raw://cbeda92138a2d581236dfd68340218ebc79b646f9e77f0ac46eac0ba2d0be80e",
+				"dweb:/ipfs/QmasKAy1v9jpV5ucP2bham6uF67e9SGSuWZzt6xeH82WEn"
 			]
 		}
 	},
