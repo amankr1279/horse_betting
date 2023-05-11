@@ -10,16 +10,16 @@ import "hardhat/console.sol";
 
 // contract Receiver {
 //     event ValueReceived(address user, uint amount);
-    
+
 //     receive() external payable {
 //         emit ValueReceived(msg.sender, msg.value);
 //     }
 // }
 
-contract Storage  {
-    mapping (address => uint) public userBet;
-    mapping (uint => address) public horseBettor; 
-    address[] public  totalUsers; // map
+contract Storage {
+    mapping(address => uint) public userBet;
+    mapping(uint => address) public horseBettor;
+    address[] public totalUsers; // map
     uint public totalAmount;
     uint public immutable HORSES;
 
@@ -29,22 +29,27 @@ contract Storage  {
         totalAmount += _betAmount;
         totalUsers.push(_user);
         horseBettor[_horse] = _user;
-        
     }
 
     constructor() {
         totalAmount = 0;
         HORSES = 5;
     }
-    function random() public view returns(uint){
-        return uint(keccak256(abi.encodePacked(block.timestamp,block.difficulty,  msg.sender))) % HORSES;
+
+    function random() public view returns (uint) {
+        return
+            uint(
+                keccak256(
+                    abi.encodePacked(
+                        block.timestamp,
+                        block.difficulty,
+                        msg.sender
+                    )
+                )
+            ) % HORSES;
     }
 
-    function pickWinner() view public returns 
-    (
-        address,
-        uint
-    ){
+    function pickWinner() public view returns (address, uint) {
         uint winnerHorse = random();
         address winnerUser = horseBettor[winnerHorse];
         // send tokens to this user's address

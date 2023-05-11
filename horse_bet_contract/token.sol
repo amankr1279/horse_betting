@@ -10,7 +10,16 @@ import "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import "@openzeppelin/contracts/token/ERC20/extensions/ERC20FlashMint.sol";
 
-contract Horse_Bet is ERC20, ERC20Burnable, ERC20Snapshot, Ownable, Pausable, ERC20Permit, ERC20Votes, ERC20FlashMint {
+contract Horse_Bet is
+    ERC20,
+    ERC20Burnable,
+    ERC20Snapshot,
+    Ownable,
+    Pausable,
+    ERC20Permit,
+    ERC20Votes,
+    ERC20FlashMint
+{
     constructor() ERC20("Horse_Bet", "BET") ERC20Permit("Horse_Bet") {}
 
     function snapshot() public onlyOwner {
@@ -29,34 +38,35 @@ contract Horse_Bet is ERC20, ERC20Burnable, ERC20Snapshot, Ownable, Pausable, ER
         _mint(to, amount);
     }
 
-    function _beforeTokenTransfer(address from, address to, uint256 amount)
-        internal
-        whenNotPaused
-        override(ERC20, ERC20Snapshot)
-    {
+    function _beforeTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override(ERC20, ERC20Snapshot) whenNotPaused {
         super._beforeTokenTransfer(from, to, amount);
     }
 
     // The following functions are overrides required by Solidity.
 
-    function _afterTokenTransfer(address from, address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _afterTokenTransfer(
+        address from,
+        address to,
+        uint256 amount
+    ) internal override(ERC20, ERC20Votes) {
         super._afterTokenTransfer(from, to, amount);
     }
 
-    function _mint(address to, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _mint(
+        address to,
+        uint256 amount
+    ) internal override(ERC20, ERC20Votes) {
         super._mint(to, amount);
     }
 
-    function _burn(address account, uint256 amount)
-        internal
-        override(ERC20, ERC20Votes)
-    {
+    function _burn(
+        address account,
+        uint256 amount
+    ) internal override(ERC20, ERC20Votes) {
         super._burn(account, amount);
     }
 }
