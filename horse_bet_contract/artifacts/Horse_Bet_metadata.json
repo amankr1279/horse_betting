@@ -1244,11 +1244,11 @@
 			]
 		},
 		"token.sol": {
-			"keccak256": "0xddef68e3cedc82d5302259963b2aea9c77e7e710f7508b0a9840760dbe85b0eb",
+			"keccak256": "0xbe30f45739c276db355f84f7ee7f63f5ee5de3770f14a4ea18e564032589c172",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c9e9d6890fbb5b0527919c6e6cab6192808b0e4cac7fe2baa7606f5f53471831",
-				"dweb:/ipfs/Qmdp89YgVme3ooAtMYusWEkEM1E3rTsFgn1fzizwcYRo6C"
+				"bzz-raw://58f230604b0fb55a9149391436481061228fbdbd9b0243af1b6b5137c2cc10fc",
+				"dweb:/ipfs/QmcPx23hg7JrzLQ8QCUwJRSN3dGaQH4ZJmRuDRJgSXj5AU"
 			]
 		}
 	},

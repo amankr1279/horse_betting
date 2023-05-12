@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "./.deps/npm/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./storage.sol";
-import "./.deps/npm/hardhat/console.sol";
+import "hardhat/console.sol";
 
 contract Main {
     Storage public simpleStorage =
