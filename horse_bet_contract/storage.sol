@@ -8,20 +8,17 @@ total number of bet amount --> winner
 */
 import "hardhat/console.sol";
 
-// contract Receiver {
-//     event ValueReceived(address user, uint amount);
-
-//     receive() external payable {
-//         emit ValueReceived(msg.sender, msg.value);
-//     }
-// }
-
 contract Storage {
     mapping(address => uint) public userBet;
     mapping(uint => address) public horseBettor;
     address[] public totalUsers; // map
     uint public totalAmount;
     uint public immutable HORSES;
+    uint public immutable BETCAP;
+    enum RACE_TYPE {
+        NORTH_AMERICAN,
+        EUROPEAN
+    }
 
     function registerUser(address _user, uint _betAmount, uint _horse) public {
         // receive betAmount from each user
@@ -31,9 +28,16 @@ contract Storage {
         horseBettor[_horse] = _user;
     }
 
+    function listAllUsers() public view {
+        for(uint i = 0; i < totalUsers.length; i++) {
+            console.log(totalUsers[i], " and bet =  ", userBet[totalUsers[i]]);
+        }
+    }
+
     constructor() {
         totalAmount = 0;
         HORSES = 5;
+        BETCAP = 500;
     }
 
     function random() public view returns (uint) {
@@ -49,10 +53,40 @@ contract Storage {
             ) % HORSES;
     }
 
+    function leftAmountForBets(uint _betAmount) public view returns (bool){
+        return (BETCAP - totalAmount + _betAmount) >= 0;
+    }
+
     function pickWinner() public view returns (address, uint) {
+        
         uint winnerHorse = random();
         address winnerUser = horseBettor[winnerHorse];
+        // while (winnerUser != address(0)) {
+        //     winnerHorse = random();
+        //     winnerUser = horseBettor[winnerHorse];
+        // }
         // send tokens to this user's address
         return (winnerUser, totalAmount);
     }
+
+    function reset() external {
+        for (uint i = 0; i < totalUsers.length; i++) {
+            delete userBet[totalUsers[i]];
+        }
+        for (uint i = 0; i < HORSES; i++) {
+            delete horseBettor[i];
+        }
+        delete totalUsers;
+        delete totalAmount;
+
+    }
 }
+
+/**
+Need functions like:-
+1. reset race. Done
+2. duplicate entries should not be there. 
+3. limit max tokens that can be hedged in a race. --> 500 Done but check not working in main.sol
+4. Main.sol must have 10,000 tokens to begin with and it will transfer the prize money to winner Done
+5. if pick winner returns "0x00" then rerun the pickWinner Done
+*/
