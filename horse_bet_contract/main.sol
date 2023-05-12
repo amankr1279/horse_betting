@@ -2,6 +2,7 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./token.sol";
 import "./storage.sol";
 import "hardhat/console.sol";
 
@@ -36,18 +37,19 @@ contract Main {
     function registerUser(address _user, uint _betAmount, uint _horse) public {
         // approve the transfer
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
-        IERC20 token = IERC20(tokenAddress);
+        Horse_Bet token = Horse_Bet(tokenAddress);
         console.log("Before transfer");
         require(
-            token.allowance(_user, address(this)) >= _betAmount,
+            token.allowance(msg.sender, address(this)) >= _betAmount,
             "you have to approve control of tokens"
         );
         // require(
         //     simpleStorage.leftAmountForBets(_betAmount), 
         //     "hedged amount exceeds the total cap of 500"
         // ); 
+        
         console.log("Require passed");
-        token.transferFrom(_user, address(this), _betAmount);
+        token.transferFrom(msg.sender, address(this), _betAmount);
         console.log("After transfer");
         console.log(msg.sender); // here msg.sender is the owner of Token contract because he is calling this main.sol to add user
         simpleStorage.registerUser(_user, _betAmount, _horse);
