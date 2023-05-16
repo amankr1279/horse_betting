@@ -37,7 +37,59 @@
 				"type": "function"
 			},
 			{
+				"inputs": [],
+				"name": "currentRace",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "enum Storage.RACE_TYPE",
+						"name": "raceType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "startTime",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_prizeFactor",
+						"type": "uint256"
+					}
+				],
+				"name": "getWinnerList",
+				"outputs": [
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
 					{
 						"internalType": "uint256",
 						"name": "",
@@ -86,14 +138,24 @@
 				"name": "pickWinner",
 				"outputs": [
 					{
-						"internalType": "address",
+						"internalType": "address[]",
 						"name": "",
-						"type": "address"
+						"type": "address[]"
 					},
 					{
-						"internalType": "uint256",
+						"internalType": "address[]",
 						"name": "",
-						"type": "uint256"
+						"type": "address[]"
+					},
+					{
+						"internalType": "address[]",
+						"name": "",
+						"type": "address[]"
+					},
+					{
+						"internalType": "uint256[]",
+						"name": "",
+						"type": "uint256[]"
 					}
 				],
 				"stateMutability": "view",
@@ -128,6 +190,11 @@
 						"internalType": "uint256",
 						"name": "_horse",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_typeOfBet",
+						"type": "uint256"
 					}
 				],
 				"name": "registerUser",
@@ -136,7 +203,18 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "string",
+						"name": "raceName",
+						"type": "string"
+					},
+					{
+						"internalType": "bool",
+						"name": "isEuropean",
+						"type": "bool"
+					}
+				],
 				"name": "reset",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -185,8 +263,13 @@
 				"name": "userBet",
 				"outputs": [
 					{
+						"internalType": "enum Storage.BET_TYPE",
+						"name": "betType",
+						"type": "uint8"
+					},
+					{
 						"internalType": "uint256",
-						"name": "",
+						"name": "amount",
 						"type": "uint256"
 					}
 				],
@@ -230,11 +313,11 @@
 			]
 		},
 		"storage.sol": {
-			"keccak256": "0x202a2fa04fe636e39e2aec2f62d63ea557fc24efb08692bb43b4906ab345dee7",
+			"keccak256": "0xdc6d7b49e7b9e7531f29f7d757610011a3679bd4e8284db831972bd97e0e25dd",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5ff209dbb959b8e4cbc13c243417412e0b3a5c06a093018228273e5788c2ac21",
-				"dweb:/ipfs/QmdmwrvhMSgGMdomTq1YmeghkWnKss1j9tTG1NL3no2Shr"
+				"bzz-raw://91e12ba3f1b3fd2ccbb63a015a07b5a4f37f4fe440269b1af6b13e9ea6b4af35",
+				"dweb:/ipfs/QmYVr1NocZtn1GWsztZpjBTT5JLKCXMWwg5jyyHNyCnuTF"
 			]
 		}
 	},
