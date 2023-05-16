@@ -8,7 +8,7 @@ import "hardhat/console.sol";
 
 contract Main is Ownable{
     Storage public simpleStorage =
-        Storage(0x8431717927C4a3343bCf1626e7B5B1D31E240406);
+        Storage(0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c);
     address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
     // IERC20 token = IERC20(tokenAddress);    
 
@@ -41,7 +41,7 @@ contract Main is Ownable{
         token.approve(address(this), _amount);
     }
 
-    function registerUser(uint _betAmount, uint _horse) public {
+    function registerUser(uint _betAmount, uint _horse, uint _betType) public {
         // approve the transfer
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
         Horse_Bet token = Horse_Bet(tokenAddress);
@@ -55,24 +55,39 @@ contract Main is Ownable{
         token.transferFrom(msg.sender, address(this), _betAmount);
         console.log("After transfer");
         console.log(msg.sender); // here msg.sender is the current user of Main.sol contract because he is calling this main.sol to add user
-        simpleStorage.registerUser(msg.sender, _betAmount, _horse);
+        
+        simpleStorage.registerUser(msg.sender, _betAmount, _horse, _betType);
         console.log("Balance address this: %s", token.balanceOf(address(this)));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
 
-    function returnToken() external onlyOwner {
-        uint amount;
-        address winner;
-        (winner, amount) = simpleStorage.pickWinner();
-        // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
+    function returnToken() external  onlyOwner {
+        (address[] memory winnerStraightUsers,
+        address[] memory winnerPlaceUsers,
+        address[] memory winnerShowUsers, 
+        uint[] memory amount) = simpleStorage.pickWinner();
         IERC20 token = IERC20(tokenAddress);
-        console.log(winner, amount);
+        console.log("Straight Winner prize",amount[0]);
+        console.log("Place Winner prize",amount[0]);
+        console.log("Show Winner prize",amount[0]);
         
+        for (uint i=0; i < winnerStraightUsers.length ; i++) 
+        {
+            token.transfer(winnerStraightUsers[i], amount[0]);
+        }
+
+        for (uint i=0; i < winnerPlaceUsers.length ; i++) 
+        {
+            token.transfer(winnerPlaceUsers[i], amount[1]);
+        }
+        for (uint i=0; i < winnerShowUsers.length ; i++) 
+        {
+            token.transfer(winnerShowUsers[i], amount[2]);
+        }
+         
         console.log("Sender : ",msg.sender); // --> owner of token contract
         console.log("Address this : ",address(this)); // -> main.sol's address
         console.log("Balance: %s", token.balanceOf(address(this)));
-
-        token.transfer(winner, amount);
     }
 } 
 /** Flow of the application.
