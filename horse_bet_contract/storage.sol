@@ -10,7 +10,7 @@ import "hardhat/console.sol";
 
 contract Storage {
     mapping(address => uint) public userBet;
-    mapping(uint => address) public horseBettor;
+    mapping(uint => address) public horseBettor; // to be changed to list
     address[] public totalUsers; // map
     uint public totalAmount;
     uint public immutable HORSES;
@@ -20,12 +20,29 @@ contract Storage {
         EUROPEAN
     }
 
+    enum BET_TYPE {
+        STRAIGHT, 
+        SHOW,
+        PLACE 
+    }
+
+    struct Race{
+        string name;
+        RACE_TYPE raceType;
+        uint startTime;
+    }
+    // Race[] public raceList;
+    Race public currentRace;
+
     function registerUser(address _user, uint _betAmount, uint _horse) public {
         // receive betAmount from each user
+        console.log("Inside registerUser");
         userBet[_user] = _betAmount;
         totalAmount += _betAmount;
         totalUsers.push(_user);
         horseBettor[_horse] = _user;
+        console.log("Done registerUser");
+        
     }
 
     function listAllUsers() public view {
@@ -54,31 +71,36 @@ contract Storage {
     }
 
     function leftAmountForBets(uint _betAmount) public view returns (bool){
-        return (BETCAP - totalAmount + _betAmount) >= 0;
+        return (BETCAP - (totalAmount + _betAmount)) >= 0;
     }
 
     function pickWinner() public view returns (address, uint) {
-        
+        // winner should be picked acc to race type
         uint winnerHorse = random();
         address winnerUser = horseBettor[winnerHorse];
-        // while (winnerUser != address(0)) {
-        //     winnerHorse = random();
-        //     winnerUser = horseBettor[winnerHorse];
-        // }
+        while (winnerUser == address(0)) {
+            winnerHorse = random();
+            winnerUser = horseBettor[winnerHorse];
+        }
         // send tokens to this user's address
         return (winnerUser, totalAmount);
     }
 
-    function reset() external {
+    function reset(string memory raceName,bool isEuropean) external {
         for (uint i = 0; i < totalUsers.length; i++) {
             delete userBet[totalUsers[i]];
         }
         for (uint i = 0; i < HORSES; i++) {
             delete horseBettor[i];
         }
-        delete totalUsers;
-        delete totalAmount;
-
+        
+        totalUsers = new address[](0);
+        totalAmount = 0;
+        // delete raceList;
+        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp);
+        if(isEuropean == true){
+            currentRace.raceType = RACE_TYPE.EUROPEAN;
+        }
     }
 }
 
