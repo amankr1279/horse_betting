@@ -1,10 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "./.deps/npm/@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./token.sol";
 import "./storage.sol";
-import "hardhat/console.sol";
+import "./.deps/npm/hardhat/console.sol";
+
+/// @title Main handler of all betting operations. 
+/// @author Aman Kumar
+/// @notice It is a single point oc contact for carrying all betting operations.
 
 contract Main is Ownable{
     Storage public simpleStorage =
@@ -36,11 +40,17 @@ contract Main is Ownable{
 
     }
 
+    /// @dev Not working. Need to check the reason
+    /// @notice Approve spending by this contract
     function approveSpending(uint _amount) public {
         Horse_Bet token = Horse_Bet(tokenAddress);
         token.approve(address(this), _amount);
     }
 
+    /** @notice This function registers user in a race.
+    @param _betAmount, _horse, _betType 
+    All tokens are sent to this contract's address as pool for prizemoney.
+     */
     function registerUser(uint _betAmount, uint _horse, uint _betType) public {
         // approve the transfer
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
@@ -61,6 +71,10 @@ contract Main is Ownable{
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
 
+    /**
+    @notice Retuns token to the winners from the creator's account.
+    @dev The left amount after sending prize money should be sent to this contract's owner. 
+    */
     function returnToken() external  onlyOwner {
         (address[] memory winnerStraightUsers,
         address[] memory winnerPlaceUsers,

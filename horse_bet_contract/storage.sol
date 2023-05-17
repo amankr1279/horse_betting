@@ -2,11 +2,15 @@
 pragma solidity ^0.8.10;
 
 // store:-
-/** user's total bet amount
+/* user's total bet amount
 total number of users in a race
 total number of bet amount --> winner
 */
-import "hardhat/console.sol";
+/** @title Storage Contract for Race 
+@author Aman Kumar
+@notice This contract stores and handles all operations related to a race.
+ */
+import "./.deps/npm/hardhat/console.sol";
 
 contract Storage {
     enum RACE_TYPE {
@@ -43,6 +47,9 @@ contract Storage {
     // Race[] public raceList;
     Race public currentRace;
 
+    /** @notice This function registers user in a race.
+    @param _user, _betAmount, _horse, _typeOfBet
+     */
     function registerUser(address _user, uint _betAmount, uint _horse, uint _typeOfBet) public {
         // receive betAmount from each user
         console.log("Inside registerUser");
@@ -61,6 +68,8 @@ contract Storage {
         
     }
 
+    /** @notice This function prints all users in a race on console.
+     */
     function listAllUsers() public view {
         for(uint i = 0; i < totalUsers.length; i++) {
             console.log(totalUsers[i] ); // "and bet =  ", userBet[totalUsers[i]]);
@@ -73,6 +82,7 @@ contract Storage {
         BETCAP = 500;
     }
 
+    /// @notice utility function that generates random number between 0 and 4(both inclusive)
     function random() public view returns (uint) {
         return
             uint(
@@ -86,10 +96,14 @@ contract Storage {
             ) % HORSES;
     }
 
+    /// @notice Calculates left amount for betting in a race.
+    /// @dev This check needs to be integrated in main.sol contract.
     function leftAmountForBets(uint _betAmount) public view returns (bool){
         return (BETCAP - (totalAmount + _betAmount)) >= 0;
     }
 
+    /// @dev utility function that gets winner list and adjust prize money according to
+    /// the prize factor
     function getWinnerList(uint _prizeFactor) public view returns(address[] memory, uint){
         uint winnerHorse = random();
         uint prize = 0;
@@ -104,7 +118,8 @@ contract Storage {
         return (winnerUsers, prize);
     }
 
-
+    /// @notice Picks 1st, 2nd and 3rd horse of a race and creates a list of prizemoney and winners who
+    /// will get that.
     function pickWinner() public view returns (
         address[] memory,
         address[] memory,
@@ -121,7 +136,8 @@ contract Storage {
         prizeMoney[0] = stPrize;
         prizeMoney[1] = placePrize;
         prizeMoney[2] = showPrize;
-        /**
+        /** 
+        @notice Prize Strategy:- 
         straight winner => totalAmount/ (1 * winnerLength);
         place winner => totalAmount/ (2 * winnerLength);
         show winner => totalAmount/ (4 * winnerLength);
@@ -130,6 +146,8 @@ contract Storage {
         return (winnerStraightUsers, winnerPlaceUsers, winnerShowUsers, prizeMoney);
     }
 
+    /// @notice resets all state variables of the race
+    /// @dev Integration with main.sol contract needs re-work.
     function reset(string memory raceName,bool isEuropean) external {
         for (uint i = 0; i < totalUsers.length; i++) {
             delete userBet[totalUsers[i]];
@@ -148,7 +166,7 @@ contract Storage {
     }
 }
 
-/**
+/*
 Need functions like:-
 1. reset race. Done
 2. duplicate entries should not be there. 
