@@ -1,20 +1,22 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.10;
 
-import "./.deps/npm/@openzeppelin/contracts/token/ERC20/IERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./token.sol";
 import "./storage.sol";
-import "./.deps/npm/hardhat/console.sol";
 
-/// @title Main handler of all betting operations. 
+// import "hardhat/console.sol";
+
+/// @title Main handler of all betting operations.
 /// @author Aman Kumar
-/// @notice It is a single point oc contact for carrying all betting operations.
+/// @notice It is a single point of contact for carrying all betting operations.
 
-contract Main is Ownable{
+contract Main is Ownable {
     Storage public simpleStorage =
         Storage(0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c);
     address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
-    // IERC20 token = IERC20(tokenAddress);    
+
+    // IERC20 token = IERC20(tokenAddress);
 
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -31,13 +33,20 @@ contract Main is Ownable{
         //logic starts
     }
 
-    function startRace(string memory raceName, bool raceType ) public  {
+    function startRace(string memory raceName, bool raceType) public {
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
         IERC20 token = IERC20(tokenAddress);
-        simpleStorage.reset(raceName, raceType );
-        
-        console.log("Balance address this: %s", token.balanceOf(address(this)));
+        simpleStorage.reset(raceName, raceType);
 
+        console.log("Balance address this: %s", token.balanceOf(address(this)));
+    }
+
+    function getHorseBettors(uint _horse, uint _id) public view {
+        console.log(simpleStorage.horseBettor(_horse - 1, _id));
+    }
+
+    function totalUsers() public view {
+        simpleStorage.listAllUsers();
     }
 
     /// @dev Not working. Need to check the reason
@@ -50,7 +59,8 @@ contract Main is Ownable{
     /** @notice This function registers user in a race.
     @param _betAmount, _horse, _betType 
     All tokens are sent to this contract's address as pool for prizemoney.
-     */
+    // TODO : Send the user an NFT when he places the bet
+    */
     function registerUser(uint _betAmount, uint _horse, uint _betType) public {
         // approve the transfer
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
@@ -60,12 +70,12 @@ contract Main is Ownable{
             token.allowance(msg.sender, address(this)) >= _betAmount,
             "you have to approve control of tokens"
         );
-        
+
         console.log("Require passed");
         token.transferFrom(msg.sender, address(this), _betAmount);
         console.log("After transfer");
         console.log(msg.sender); // here msg.sender is the current user of Main.sol contract because he is calling this main.sol to add user
-        
+
         simpleStorage.registerUser(msg.sender, _betAmount, _horse, _betType);
         console.log("Balance address this: %s", token.balanceOf(address(this)));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
@@ -75,35 +85,34 @@ contract Main is Ownable{
     @notice Retuns token to the winners from the creator's account.
     @dev The left amount after sending prize money should be sent to this contract's owner. 
     */
-    function returnToken() external  onlyOwner {
-        (address[] memory winnerStraightUsers,
-        address[] memory winnerPlaceUsers,
-        address[] memory winnerShowUsers, 
-        uint[] memory amount) = simpleStorage.pickWinner();
+    function returnToken() external onlyOwner {
+        (
+            address[] memory winnerStraightUsers,
+            address[] memory winnerPlaceUsers,
+            address[] memory winnerShowUsers,
+            uint[] memory amount
+        ) = simpleStorage.pickWinner();
         IERC20 token = IERC20(tokenAddress);
-        console.log("Straight Winner prize",amount[0]);
-        console.log("Place Winner prize",amount[0]);
-        console.log("Show Winner prize",amount[0]);
-        
-        for (uint i=0; i < winnerStraightUsers.length ; i++) 
-        {
+        console.log("Straight Winner prize", amount[0]);
+        console.log("Place Winner prize", amount[1]);
+        console.log("Show Winner prize", amount[2]);
+
+        for (uint i = 0; i < winnerStraightUsers.length; i++) {
             token.transfer(winnerStraightUsers[i], amount[0]);
         }
 
-        for (uint i=0; i < winnerPlaceUsers.length ; i++) 
-        {
+        for (uint i = 0; i < winnerPlaceUsers.length; i++) {
             token.transfer(winnerPlaceUsers[i], amount[1]);
         }
-        for (uint i=0; i < winnerShowUsers.length ; i++) 
-        {
+        for (uint i = 0; i < winnerShowUsers.length; i++) {
             token.transfer(winnerShowUsers[i], amount[2]);
         }
-         
-        console.log("Sender : ",msg.sender); // --> owner of token contract
-        console.log("Address this : ",address(this)); // -> main.sol's address
+
+        console.log("Sender : ", msg.sender); // --> owner of token contract
+        console.log("Address this : ", address(this)); // -> main.sol's address
         console.log("Balance: %s", token.balanceOf(address(this)));
     }
-} 
+}
 /** Flow of the application.
 1. The creator approves spending of tokens for all users who want to partake in betting
 2. The creator of the contract transfers some tokens to all users.

@@ -1,0 +1,5 @@
+1. Number of horses should be controllable for a race.
+2. Deadline check
+3. Hosting multiple races simulatneously.
+4. Removal of BETCAP.
+5. Mint tokens in exchange of ethers.

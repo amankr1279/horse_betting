@@ -37,6 +37,43 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "Loot",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "horse",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "position",
+						"type": "uint256"
+					}
+				],
+				"name": "allocationUtil",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
 				"inputs": [],
 				"name": "currentRace",
 				"outputs": [
@@ -57,6 +94,29 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "getRaceWinners",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "pure",
 				"type": "function"
 			},
 			{
@@ -163,6 +223,19 @@
 			},
 			{
 				"inputs": [],
+				"name": "raceExec",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "randNonce",
+						"type": "uint256"
+					}
+				],
 				"name": "random",
 				"outputs": [
 					{
@@ -279,12 +352,46 @@
 		],
 		"devdoc": {
 			"kind": "dev",
-			"methods": {},
+			"methods": {
+				"getWinnerList(uint256)": {
+					"details": "utility function that gets winner list and adjust prize money according to the prize factor"
+				},
+				"leftAmountForBets(uint256)": {
+					"details": "This check needs to be integrated in main.sol contract."
+				},
+				"registerUser(address,uint256,uint256,uint256)": {
+					"params": {
+						"_user": ", _betAmount, _horse, _typeOfBet"
+					}
+				},
+				"reset(string,bool)": {
+					"details": "Integration with main.sol contract needs re-work."
+				}
+			},
 			"version": 1
 		},
 		"userdoc": {
 			"kind": "user",
-			"methods": {},
+			"methods": {
+				"leftAmountForBets(uint256)": {
+					"notice": "Calculates left amount for betting in a race."
+				},
+				"listAllUsers()": {
+					"notice": "This function prints all users in a race on console."
+				},
+				"pickWinner()": {
+					"notice": "Picks 1st, 2nd and 3rd horse of a race and creates a list of prizemoney and winners who will get that."
+				},
+				"random(uint256)": {
+					"notice": "utility function that generates random number between 0 and 4(both inclusive)"
+				},
+				"registerUser(address,uint256,uint256,uint256)": {
+					"notice": "This function registers user in a race."
+				},
+				"reset(string,bool)": {
+					"notice": "resets all state variables of the race"
+				}
+			},
 			"version": 1
 		}
 	},
@@ -313,11 +420,11 @@
 			]
 		},
 		"storage.sol": {
-			"keccak256": "0xdc6d7b49e7b9e7531f29f7d757610011a3679bd4e8284db831972bd97e0e25dd",
+			"keccak256": "0x63c8ebd7d3b31afb736846b54d240b3a37f12020cc7caaa7280cc1ed970bff8e",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://91e12ba3f1b3fd2ccbb63a015a07b5a4f37f4fe440269b1af6b13e9ea6b4af35",
-				"dweb:/ipfs/QmYVr1NocZtn1GWsztZpjBTT5JLKCXMWwg5jyyHNyCnuTF"
+				"bzz-raw://3b8fb29b9d5a88c2165f95d3555b2429240edf5f9b9daf9aaf27f7486835cffc",
+				"dweb:/ipfs/QmPn8DB1Nv2tqm9dov8iBzD8GwYaESHPS1NikH7PbE8hoi"
 			]
 		}
 	},
