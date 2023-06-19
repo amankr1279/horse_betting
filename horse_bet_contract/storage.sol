@@ -174,6 +174,8 @@ contract Storage {
         for (uint i=0 ; i < winners.length; i++) 
         {
             Bet memory bet = userBet[winners[i]];
+            console.log("bet : ", bet.amount);
+            // console.log("" , bet.betType);
             if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
                 Loot[winners[i]] += bet.amount * 6;
             } 

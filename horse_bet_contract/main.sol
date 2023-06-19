@@ -13,8 +13,8 @@ import "./storage.sol";
 
 contract Main is Ownable {
     Storage public simpleStorage =
-        Storage(0xb27A31f1b0AF2946B7F582768f03239b1eC07c2c);
-    address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
+        Storage(0x3Bf61A6b629E6Fcb28AaBfAdE13726ca9CcC81ed);
+    address public tokenAddress = 0x86c3259c19f69D64634d0D7297B52CF299cab74d;
 
     // IERC20 token = IERC20(tokenAddress);
 
@@ -33,7 +33,7 @@ contract Main is Ownable {
         //logic starts
     }
 
-    function startRace(string memory raceName, bool raceType) public {
+    function startRace(string memory raceName, bool raceType) public payable {
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
         IERC20 token = IERC20(tokenAddress);
         simpleStorage.reset(raceName, raceType);
@@ -41,7 +41,7 @@ contract Main is Ownable {
         console.log("Balance address this: %s", token.balanceOf(address(this)));
     }
 
-    function getHorseBettors(uint _horse, uint _id) public view {
+    function getHorseBettors(uint _horse, uint _id) public  payable {
         console.log(simpleStorage.horseBettor(_horse - 1, _id));
     }
 
@@ -61,7 +61,7 @@ contract Main is Ownable {
     All tokens are sent to this contract's address as pool for prizemoney.
     // TODO : Send the user an NFT when he places the bet
     */
-    function registerUser(uint _betAmount, uint _horse, uint _betType) public {
+    function registerUser(uint _betAmount, uint _horse, uint _betType) public payable {
         // approve the transfer
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
         Horse_Bet token = Horse_Bet(tokenAddress);
@@ -85,7 +85,7 @@ contract Main is Ownable {
     @notice Retuns token to the winners from the creator's account.
     @dev The left amount after sending prize money should be sent to this contract's owner. 
     */
-    function returnToken() external onlyOwner {
+    function returnToken() external onlyOwner payable{
         (
             address[] memory winnerStraightUsers,
             address[] memory winnerPlaceUsers,
