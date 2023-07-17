@@ -12,11 +12,9 @@ import "./service.sol";
 /// @notice It is a single point of contact for carrying out all betting operations.
 
 contract Main is Ownable {
-    // Storage public simpleStorage =
-    //     Storage(0x3Bf61A6b629E6Fcb28AaBfAdE13726ca9CcC81ed);
     address public tokenAddress = 0x86c3259c19f69D64634d0D7297B52CF299cab74d;
 
-    // Storage vars 
+    //**************** Storage vars ***********************//
     enum RACE_TYPE {
         NORTH_AMERICAN,
         EUROPEAN
@@ -37,8 +35,8 @@ contract Main is Ownable {
         string name;
         RACE_TYPE raceType;
         uint startTime;
-        // uint raceId;
-        // uint locationId;
+        uint raceId;
+        uint locationId;
     }
 
     mapping(address => Bet) public userBet;
@@ -53,6 +51,8 @@ contract Main is Ownable {
 
     // prize Money for each user
     mapping(address => uint) public Loot;
+
+    // ************************* End storage vars ***************//
 
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -69,9 +69,9 @@ contract Main is Ownable {
         //logic starts
     }
 
-    function startRace(string memory raceName, bool raceType) public payable {
+    function startRace(string memory raceName, bool raceType, uint numberofHorses) public payable {
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
-        IERC20 token = IERC20(tokenAddress);
+        IERC20 token = Horse_Bet(tokenAddress);
         // simpleStorage.reset(raceName, raceType);
         console.log("Balance address this: %s", token.balanceOf(address(this)));
     }
@@ -104,7 +104,18 @@ contract Main is Ownable {
         console.log("After transfer");
         console.log(msg.sender); // here msg.sender is the current user of Main.sol contract because he is calling this main.sol to add user
 
-        Storage.registerUser(msg.sender, _betAmount, _horse, _betType);
+        BET_TYPE x = BET_TYPE.PLACE;
+        if (_typeOfBet == 1) {
+            x = BET_TYPE.STRAIGHT;
+        } else if (_typeOfBet == 2) {
+            x = BET_TYPE.SHOW;
+        }
+        Bet memory bet = Bet(x, _betAmount);
+        userBet[_user] = bet;
+        totalAmount += _betAmount;
+        totalUsers.push(_user);
+        horseBettor[_horse].push(_user);
+
         console.log("Balance address this: %s", token.balanceOf(address(this)));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
@@ -120,7 +131,7 @@ contract Main is Ownable {
             address[] memory winnerShowUsers,
             uint[] memory amount
         ) = simpleStorage.pickWinner();
-        IERC20 token = IERC20(tokenAddress);
+        Horse_Bet token = Horse_Bet(tokenAddress);
         console.log("Straight Winner prize", amount[0]);
         console.log("Place Winner prize", amount[1]);
         console.log("Show Winner prize", amount[2]);

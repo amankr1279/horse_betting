@@ -29,76 +29,51 @@ contract Service {
         uint amount;
     }
 
-    struct Race {
-        string name;
-        RACE_TYPE raceType;
-        uint startTime;
-        // uint raceId;
-        // uint locationId;
-    }
 
-    mapping(address => Bet) public userBet;
-    mapping(uint => address[]) public horseBettor; // to be changed to list
-    address[] public totalUsers;
-    uint public totalAmount;
-    uint public immutable HORSES; // mutable in future
-    uint public immutable BETCAP;
 
-    // Race[] public raceList;
-    Race public currentRace;
+    // /** @notice This function registers user in a race.
+    // @param _user, _betAmount, _horse, _typeOfBet
+    //  */
+    // function registerUser(
+    //     address _user,
+    //     uint _betAmount,
+    //     uint _horse,
+    //     uint _typeOfBet
+    // ) public {
+    //     // receive betAmount from each user
+    //     console.log("Inside registerUser");
+    //     BET_TYPE x = BET_TYPE.PLACE;
+    //     if (_typeOfBet == 1) {
+    //         x = BET_TYPE.STRAIGHT;
+    //     } else if (_typeOfBet == 2) {
+    //         x = BET_TYPE.SHOW;
+    //     }
+    //     Bet memory bet = Bet(x, _betAmount);
+    //     userBet[_user] = bet;
+    //     totalAmount += _betAmount;
+    //     totalUsers.push(_user);
+    //     horseBettor[_horse].push(_user);
+    //     console.log("Done registerUser");
+    // }
 
-    // prize Money for each user
-    mapping(address => uint) public Loot;
 
-    /** @notice This function registers user in a race.
-    @param _user, _betAmount, _horse, _typeOfBet
-     */
-    function registerUser(
-        address _user,
-        uint _betAmount,
-        uint _horse,
-        uint _typeOfBet
-    ) public {
-        // receive betAmount from each user
-        console.log("Inside registerUser");
-        BET_TYPE x = BET_TYPE.PLACE;
-        if (_typeOfBet == 1) {
-            x = BET_TYPE.STRAIGHT;
-        } else if (_typeOfBet == 2) {
-            x = BET_TYPE.SHOW;
-        }
-        Bet memory bet = Bet(x, _betAmount);
-        userBet[_user] = bet;
-        totalAmount += _betAmount;
-        totalUsers.push(_user);
-        horseBettor[_horse].push(_user);
-        console.log("Done registerUser");
-    }
-
-    /** @notice This function prints all users in a race on console.
-     */
-    function listAllUsers() public view {
-        for (uint i = 0; i < totalUsers.length; i++) {
-            console.log(totalUsers[i]); // "and bet =  ", userBet[totalUsers[i]]);
-        }
-    }
 
     constructor() {
-        totalAmount = 0;
-        HORSES = 5;
-        BETCAP = 500;
+        // totalAmount = 0;
+        // HORSES = 5;
+        // BETCAP = 500;
     }
 
     /// @notice utility function that generates random number between 0 and 4(both inclusive)
-    function random(uint randNonce) public view returns (uint) {
+    function random(uint randNonce, uint HORSES) public view returns (uint) {
         uint(keccak256(abi.encodePacked(block.timestamp,msg.sender,randNonce))) % HORSES;
     }
 
-    /// @notice Calculates left amount for betting in a race.
-    /// @dev This check needs to be integrated in main.sol contract.
-    function leftAmountForBets(uint _betAmount) public view returns (bool) {
-        return (BETCAP - (totalAmount + _betAmount)) >= 0;
-    }
+    // /// @notice Calculates left amount for betting in a race.
+    // /// @dev This check needs to be integrated in main.sol contract.
+    // function leftAmountForBets(uint _betAmount) public view returns (bool) {
+    //     return (BETCAP - (totalAmount + _betAmount)) >= 0;
+    // }
 
     function getRaceWinners() public pure returns (uint,uint,uint){
         uint h1 = 1;
@@ -119,6 +94,7 @@ contract Service {
     /// the prize factor
     function getWinnerList(
         uint _prizeFactor
+
     ) public view returns (address[] memory, uint) {
         uint winnerHorse = random(1); // not checking if same horse is returned for more than 1 position
         uint prize = 0;
