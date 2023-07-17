@@ -7,12 +7,12 @@ total number of users in a race
 total number of bet amount --> winner
 */
 /** @title Storage Contract for Race 
-@author Aman Kumar
-@notice This contract stores and handles all operations related to a race.
+@author @amankr1279
+@notice This contract handles all operations related to a race.
  */
 import "hardhat/console.sol";
 
-contract Storage {
+contract Service {
     enum RACE_TYPE {
         NORTH_AMERICAN,
         EUROPEAN

@@ -3,20 +3,56 @@ pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import "./token.sol";
-import "./storage.sol";
+import "./service.sol";
 
 // import "hardhat/console.sol";
 
 /// @title Main handler of all betting operations.
-/// @author Aman Kumar
-/// @notice It is a single point of contact for carrying all betting operations.
+/// @author @amankr1279
+/// @notice It is a single point of contact for carrying out all betting operations.
 
 contract Main is Ownable {
-    Storage public simpleStorage =
-        Storage(0x3Bf61A6b629E6Fcb28AaBfAdE13726ca9CcC81ed);
+    // Storage public simpleStorage =
+    //     Storage(0x3Bf61A6b629E6Fcb28AaBfAdE13726ca9CcC81ed);
     address public tokenAddress = 0x86c3259c19f69D64634d0D7297B52CF299cab74d;
 
-    // IERC20 token = IERC20(tokenAddress);
+    // Storage vars 
+    enum RACE_TYPE {
+        NORTH_AMERICAN,
+        EUROPEAN
+    }
+
+    enum BET_TYPE {
+        STRAIGHT,
+        SHOW,
+        PLACE
+    }
+
+    struct Bet {
+        BET_TYPE betType;
+        uint amount;
+    }
+
+    struct Race {
+        string name;
+        RACE_TYPE raceType;
+        uint startTime;
+        // uint raceId;
+        // uint locationId;
+    }
+
+    mapping(address => Bet) public userBet;
+    mapping(uint => address[]) public horseBettor; // to be changed to list
+    address[] public totalUsers;
+    uint public totalAmount;
+    uint public immutable HORSES; // mutable in future
+    uint public immutable BETCAP;
+
+    // Race[] public raceList;
+    Race public currentRace;
+
+    // prize Money for each user
+    mapping(address => uint) public Loot;
 
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -36,18 +72,10 @@ contract Main is Ownable {
     function startRace(string memory raceName, bool raceType) public payable {
         // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
         IERC20 token = IERC20(tokenAddress);
-        simpleStorage.reset(raceName, raceType);
-
+        // simpleStorage.reset(raceName, raceType);
         console.log("Balance address this: %s", token.balanceOf(address(this)));
     }
 
-    function getHorseBettors(uint _horse, uint _id) public  payable {
-        console.log(simpleStorage.horseBettor(_horse - 1, _id));
-    }
-
-    function totalUsers() public view {
-        simpleStorage.listAllUsers();
-    }
 
     /// @dev Not working. Need to check the reason
     /// @notice Approve spending by this contract
@@ -76,7 +104,7 @@ contract Main is Ownable {
         console.log("After transfer");
         console.log(msg.sender); // here msg.sender is the current user of Main.sol contract because he is calling this main.sol to add user
 
-        simpleStorage.registerUser(msg.sender, _betAmount, _horse, _betType);
+        Storage.registerUser(msg.sender, _betAmount, _horse, _betType);
         console.log("Balance address this: %s", token.balanceOf(address(this)));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
