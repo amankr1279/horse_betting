@@ -6,9 +6,9 @@ pragma solidity ^0.8.10;
 total number of users in a race
 total number of bet amount --> winner
 */
-/** @title Storage Contract for Race 
+/** @title Service Contract for Race 
 @author @amankr1279
-@notice This contract handles all operations related to a race.
+@notice This contract handles all mathematical operations related to a race.
  */
 import "hardhat/console.sol";
 
@@ -28,35 +28,6 @@ contract Service {
         BET_TYPE betType;
         uint amount;
     }
-
-
-
-    // /** @notice This function registers user in a race.
-    // @param _user, _betAmount, _horse, _typeOfBet
-    //  */
-    // function registerUser(
-    //     address _user,
-    //     uint _betAmount,
-    //     uint _horse,
-    //     uint _typeOfBet
-    // ) public {
-    //     // receive betAmount from each user
-    //     console.log("Inside registerUser");
-    //     BET_TYPE x = BET_TYPE.PLACE;
-    //     if (_typeOfBet == 1) {
-    //         x = BET_TYPE.STRAIGHT;
-    //     } else if (_typeOfBet == 2) {
-    //         x = BET_TYPE.SHOW;
-    //     }
-    //     Bet memory bet = Bet(x, _betAmount);
-    //     userBet[_user] = bet;
-    //     totalAmount += _betAmount;
-    //     totalUsers.push(_user);
-    //     horseBettor[_horse].push(_user);
-    //     console.log("Done registerUser");
-    // }
-
-
 
     constructor() {
         // totalAmount = 0;
@@ -78,126 +49,114 @@ contract Service {
     function getRaceWinners() public pure returns (uint,uint,uint){
         uint h1 = 1;
         uint h2 = 2;
-        // while (h1 == h2) 
-        // {
-        //     h2 = random();
-        // }
         uint h3 = 3;
-        // while (h3 == h1 || h3 == h2) 
-        // {
-        //     h3 = random();
-        // }
+
         return( h1, h2, h3);
     }
 
-    /// @dev utility function that gets winner list and adjust prize money according to
-    /// the prize factor
-    function getWinnerList(
-        uint _prizeFactor
+    // /// @dev utility function that gets winner list and adjust prize money according to
+    // /// the prize factor
+    // function getWinnerList(
+    //     uint _prizeFactor
 
-    ) public view returns (address[] memory, uint) {
-        uint winnerHorse = random(1); // not checking if same horse is returned for more than 1 position
-        uint prize = 0;
-        address[] memory winnerUsers = horseBettor[winnerHorse];
-        while (winnerUsers.length == 0) {
-            winnerHorse = random(2);
-            winnerUsers = horseBettor[winnerHorse];
-        }
-        prize = totalAmount / (winnerUsers.length * _prizeFactor);
+    // ) public view returns (address[] memory, uint) {
+    //     uint winnerHorse = random(1); // not checking if same horse is returned for more than 1 position
+    //     uint prize = 0;
+        
+    //     address[] memory winnerUsers = horseBettor[winnerHorse];
+    //     while (winnerUsers.length == 0) {
+    //         winnerHorse = random(2);
+    //         winnerUsers = horseBettor[winnerHorse];
+    //     }
+    //     prize = totalAmount / (winnerUsers.length * _prizeFactor);
 
-        return (winnerUsers, prize);
-    }
+    //     return (winnerUsers, prize);
+    // }
 
     /// @notice Picks 1st, 2nd and 3rd horse of a race and creates a list of prizemoney and winners who
     /// will get that.
-    function pickWinner()
-        public
-        view
-        returns (
-            address[] memory,
-            address[] memory,
-            address[] memory,
-            uint[] memory
-        )
-    {
-        // winner should be picked acc to race type
+    // function pickWinner()
+    //     public
+    //     view
+    //     returns (
+    //         address[] memory,
+    //         address[] memory,
+    //         address[] memory,
+    //         uint[] memory
+    //     )
+    // {
+    //     // winner should be picked acc to race type
 
-        (address[] memory winnerStraightUsers, uint stPrize) = getWinnerList(1);
-        (address[] memory winnerPlaceUsers, uint showPrize) = getWinnerList(2);
-        (address[] memory winnerShowUsers, uint placePrize) = getWinnerList(4);
-        // send tokens to this user's address
-        uint[] memory prizeMoney = new uint[](3);
-        prizeMoney[0] = stPrize;
-        prizeMoney[1] = placePrize;
-        prizeMoney[2] = showPrize;
-        /** 
-        @notice Prize Strategy:- 
-        straight winner => totalAmount/ (1 * winnerLength);
-        place winner => totalAmount/ (2 * winnerLength);
-        show winner => totalAmount/ (4 * winnerLength);
-        */
+    //     (address[] memory winnerStraightUsers, uint stPrize) = getWinnerList(1);
+    //     (address[] memory winnerPlaceUsers, uint showPrize) = getWinnerList(2);
+    //     (address[] memory winnerShowUsers, uint placePrize) = getWinnerList(4);
+    //     // send tokens to this user's address
+    //     uint[] memory prizeMoney = new uint[](3);
+    //     prizeMoney[0] = stPrize;
+    //     prizeMoney[1] = placePrize;
+    //     prizeMoney[2] = showPrize;
 
-        return (
-            winnerStraightUsers,
-            winnerPlaceUsers,
-            winnerShowUsers,
-            prizeMoney
-        );
-    }
+    //     return (
+    //         winnerStraightUsers,
+    //         winnerPlaceUsers,
+    //         winnerShowUsers,
+    //         prizeMoney
+    //     );
+    // }
 
-    function allocationUtil(uint horse, uint position) public {
-        address[] memory winners = horseBettor[horse];
-        for (uint i=0 ; i < winners.length; i++) 
-        {
-            Bet memory bet = userBet[winners[i]];
-            console.log("bet : ", bet.amount);
-            // console.log("" , bet.betType);
-            if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
-                Loot[winners[i]] += bet.amount * 6;
-            } 
-            if(bet.betType == BET_TYPE.SHOW && position <= 2) {
-                Loot[winners[i]] += bet.amount * 4;
-            } 
-            if(bet.betType == BET_TYPE.PLACE && position <= 3){
-                Loot[winners[i]] += bet.amount * 2;
-            }
-        }
-    }
+    // function allocationUtil(uint horse, uint position) public {
+    //     address[] memory winners = horseBettor[horse];
+    //     for (uint i=0 ; i < winners.length; i++) 
+    //     {
+    //         Bet memory bet = userBet[winners[i]];
+    //         console.log("bet : ", bet.amount);
+    //         // console.log("" , bet.betType);
+    //         if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
+    //             Loot[winners[i]] += bet.amount * 6;
+    //         } 
+    //         if(bet.betType == BET_TYPE.SHOW && position <= 2) {
+    //             Loot[winners[i]] += bet.amount * 4;
+    //         } 
+    //         if(bet.betType == BET_TYPE.PLACE && position <= 3){
+    //             Loot[winners[i]] += bet.amount * 2;
+    //         }
+    //     }
+    // }
 
-    function raceExec() public   {
-        (uint h1,uint h2,uint h3) = getRaceWinners();
-        // address[] memory w1; 
-        // address[] memory w2;
-        // address[] memory w3;
-        // w1 = horseBettor[h1];
-        // w2 = horseBettor[h2];
-        // w3 = horseBettor[h3];
+    // function raceExec() public   {
+    //     (uint h1,uint h2,uint h3) = getRaceWinners();
+    //     // address[] memory w1; 
+    //     // address[] memory w2;
+    //     // address[] memory w3;
+    //     // w1 = horseBettor[h1];
+    //     // w2 = horseBettor[h2];
+    //     // w3 = horseBettor[h3];
 
-        // 2 lists: user and corresponding prize money
-        // OR, store it in a map and query it as per user's addr input --> seems better
-        allocationUtil(h1,1);
-        allocationUtil(h2,2);
-        allocationUtil(h3,3);
-    }
+    //     // 2 lists: user and corresponding prize money
+    //     // OR, store it in a map and query it as per user's addr input --> seems better
+    //     // allocationUtil(h1,1);
+    //     // allocationUtil(h2,2);
+    //     // allocationUtil(h3,3);
+    // }
 
     /// @notice resets all state variables of the race
     /// @dev Integration with main.sol contract needs re-work.
-    function reset(string memory raceName, bool isEuropean) external {
-        for (uint i = 0; i < totalUsers.length; i++) {
-            delete userBet[totalUsers[i]];
-        }
-        for (uint i = 0; i < HORSES; i++) {
-            delete horseBettor[i];
-        }
+    // function reset(string memory raceName, bool isEuropean) external {
+    //     for (uint i = 0; i < totalUsers.length; i++) {
+    //         delete userBet[totalUsers[i]];
+    //     }
+    //     for (uint i = 0; i < HORSES; i++) {
+    //         delete horseBettor[i];
+    //     }
 
-        totalUsers = new address[](0);
-        totalAmount = 0;
-        // delete raceList;
-        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes);
-        if (isEuropean == true) {
-            currentRace.raceType = RACE_TYPE.EUROPEAN;
-        }
-    }
+    //     totalUsers = new address[](0);
+    //     totalAmount = 0;
+    //     // delete raceList;
+    //     currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes);
+    //     if (isEuropean == true) {
+    //         currentRace.raceType = RACE_TYPE.EUROPEAN;
+    //     }
+    // }
 }
 
 /*

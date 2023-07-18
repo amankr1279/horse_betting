@@ -5,3 +5,4 @@
 4. Removal of BETCAP.
 5. Mint tokens in exchange of ethers.
 6. Test on hardhat
+7. Add an external off-chain RNG endpoint whoch can be called for finding random numbers
