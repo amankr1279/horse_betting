@@ -13,6 +13,7 @@ import "./service.sol";
 
 contract Main is Ownable {
     address public tokenAddress = 0x86c3259c19f69D64634d0D7297B52CF299cab74d;
+    address public myOwner = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
 
     //**************** Storage vars ***********************//
     enum RACE_TYPE {
@@ -29,6 +30,7 @@ contract Main is Ownable {
     struct Bet {
         BET_TYPE betType;
         uint amount;
+        uint horseNum;
     }
 
     struct Race {
@@ -38,16 +40,15 @@ contract Main is Ownable {
         uint raceId;
         uint locationId;
         uint first;
-        uint second;
+        uint runner;
         uint third;
     }
 
-    mapping(address => Bet) public userBet;
+    mapping(address => Bet[]) public userBet;
     mapping(uint => address[]) public horseBettor; 
     address[] public totalUsers;
     uint public totalAmount;
-    uint public immutable HORSES; // mutable in future
-    // uint public immutable BETCAP;
+    uint public immutable HORSES = 5; // mutable in future
 
     // Race[] public raceList;
     Race public currentRace;
@@ -57,13 +58,13 @@ contract Main is Ownable {
 
     // ************************* End storage vars ***************//
 
-    function getHorseBettors(uint horse) view external returns (address[]){
-        return horseBettor[horse];
-    }
+    // function getHorseBettors(uint horse) view external returns (address[]){
+    //     return horseBettor[horse];
+    // }
 
-    function getLoot(address userAddress) view external returns (address){
-        return Loot[userAddress];
-    }
+    // function getLoot(address userAddress) view external returns (address){
+    //     return Loot[userAddress];
+    // }
 
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -80,10 +81,8 @@ contract Main is Ownable {
         //logic starts
     }
 
+
     function startRace(string memory raceName, bool raceType, uint numberofHorses, uint begin) public payable {
-        // // address tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
-        // IERC20 token = Horse_Bet(tokenAddress);
-        // // simpleStorage.reset(raceName, raceType);
         // console.log("Balance address this: %s", token.balanceOf(address(this)));
         for (uint i = 0; i < totalUsers.length; i++) {
             delete userBet[totalUsers[i]];
@@ -95,7 +94,7 @@ contract Main is Ownable {
         totalUsers = new address[](0);
         totalAmount = 0;
         // delete raceList;
-        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes);
+        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes,1,1,0,0,0 );
         if (raceType == true) {
             currentRace.raceType = RACE_TYPE.EUROPEAN;
         }
@@ -124,9 +123,9 @@ contract Main is Ownable {
         );
 
         console.log("Require passed");
-        token.transferFrom(msg.sender, address(this), _betAmount);
+        token.transferFrom(msg.sender, myOwner, _betAmount);
         console.log("After transfer");
-        console.log(msg.sender); // here msg.sender is the current user of "main . sol" contract because he is calling this "main . sol"to add user
+        console.log(msg.sender); // here msg.sender is the current user of "main . sol" contract because he is calling this "main . sol"to add himself
 
         BET_TYPE x = BET_TYPE.PLACE;
         if (_betType == 1) {
@@ -134,73 +133,66 @@ contract Main is Ownable {
         } else if (_betType == 2) {
             x = BET_TYPE.SHOW;
         }
-        Bet memory bet = Bet(x, _betAmount);
-        userBet[msg.sender] = bet;
+        Bet memory bet = Bet(x, _betAmount, _horse);
+        userBet[msg.sender].push(bet);
         totalAmount += _betAmount;
         totalUsers.push(msg.sender);
         horseBettor[_horse].push(msg.sender);
+        // send an NFT to the bettor as an acknowledgement
 
-        console.log("Balance address this: %s", token.balanceOf(address(this)));
+        console.log("Balance address myOwner: %s", token.balanceOf(myOwner));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
 
     function raceExecution() public {
-        // (uint h1, uint h2, uint h3) = Service.getRaceWinners();
-
+        Service service = new Service();
+        (uint h1, uint h2, uint h3) = service.getRaceWinners(HORSES);
+        currentRace.first = h1;
+        currentRace.runner = h2;
+        currentRace.third = h3;
     }
     /**
     @notice Retuns token to the winners from the creator's account.
-    @dev The left amount after sending prize money should be sent to this contract's owner. 
+    @dev The left amount after sending prize money should be sent to this contract's myOwner. 
     */
-    function returnToken() external onlyOwner payable{
-
-        // (
-        //     address[] memory winnerStraightUsers,
-        //     address[] memory winnerPlaceUsers,
-        //     address[] memory winnerShowUsers,
-        //     uint[] memory amount
-        // ) = Service.pickWinner();
-        (uint h1, uint h2, uint h3) = Service.getRaceWinners();
-
+    function returnToken(address user) external payable{
         Horse_Bet token = Horse_Bet(tokenAddress);
-        console.log("Straight Winner prize", amount[0]);
-        console.log("Place Winner prize", amount[1]);
-        console.log("Show Winner prize", amount[2]);
-
-        for (uint i = 0; i < winnerStraightUsers.length; i++) {
-            token.transfer(winnerStraightUsers[i], amount[0]);
-        }
-
-        for (uint i = 0; i < winnerPlaceUsers.length; i++) {
-            token.transfer(winnerPlaceUsers[i], amount[1]);
-        }
-        for (uint i = 0; i < winnerShowUsers.length; i++) {
-            token.transfer(winnerShowUsers[i], amount[2]);
-        }
-
-        console.log("Sender : ", msg.sender); // --> owner of token contract
-        console.log("Address this : ", address(this)); // -> main.sol's address
-        console.log("Balance: %s", token.balanceOf(address(this)));
-    }
-
-    function allocationUtil(uint horse, uint position) public {
-        address[] memory winners = horseBettor[horse];
-        for (uint i=0 ; i < winners.length; i++) 
+        Bet[] memory bets = userBet[user];
+        uint amt = 0;
+        uint position = 0;
+        for (uint i= 0; i < bets.length; i++) 
         {
-            Bet memory bet = userBet[winners[i]];
-            console.log("bet : ", bet.amount);
-            // console.log("" , bet.betType);
+            Bet memory bet = bets[i];
+            position = findPos(bet.horseNum);
             if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
-                Loot[winners[i]] += bet.amount * 6;
+                amt += bet.amount * 6;
             } 
             if(bet.betType == BET_TYPE.SHOW && position <= 2) {
-                Loot[winners[i]] += bet.amount * 4;
+                amt += bet.amount * 4;
             } 
             if(bet.betType == BET_TYPE.PLACE && position <= 3){
-                Loot[winners[i]] += bet.amount * 2;
+                amt += bet.amount * 2;
             }
         }
+        token.transferFrom(myOwner, user, amt);
+        console.log("Sender : ", myOwner); // --> myOwner of token contract
+        console.log("Receiver this : ", user); // -> main.sol's address
+        console.log("Balance: %s", token.balanceOf(user));
     }
+
+    function findPos(uint h) public view returns (uint){
+        if (h == currentRace.first) {
+            return 1;
+        } 
+        if (h == currentRace.runner) {
+            return 2;
+        } 
+        if (h == currentRace.third) {
+            return 3;
+        }
+        return 0;
+    }
+
 }
 /** Flow of the application.
 1. The creator approves spending of tokens for all users who want to partake in betting

@@ -25,6 +25,38 @@
 				"type": "event"
 			},
 			{
+				"inputs": [],
+				"name": "HORSES",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "Loot",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -74,21 +106,107 @@
 				"type": "function"
 			},
 			{
-				"inputs": [
+				"inputs": [],
+				"name": "currentRace",
+				"outputs": [
+					{
+						"internalType": "string",
+						"name": "name",
+						"type": "string"
+					},
+					{
+						"internalType": "enum Main.RACE_TYPE",
+						"name": "raceType",
+						"type": "uint8"
+					},
 					{
 						"internalType": "uint256",
-						"name": "_horse",
+						"name": "startTime",
 						"type": "uint256"
 					},
 					{
 						"internalType": "uint256",
-						"name": "_id",
+						"name": "raceId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "locationId",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "first",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "runner",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "third",
 						"type": "uint256"
 					}
 				],
-				"name": "getHorseBettors",
-				"outputs": [],
-				"stateMutability": "payable",
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "h",
+						"type": "uint256"
+					}
+				],
+				"name": "findPos",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "horseBettor",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "myOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
 				"type": "function"
 			},
 			{
@@ -102,6 +220,13 @@
 					}
 				],
 				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "raceExecution",
+				"outputs": [],
+				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -135,23 +260,16 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
-				"name": "returnToken",
-				"outputs": [],
-				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "simpleStorage",
-				"outputs": [
+				"inputs": [
 					{
-						"internalType": "contract Storage",
-						"name": "",
+						"internalType": "address",
+						"name": "user",
 						"type": "address"
 					}
 				],
-				"stateMutability": "view",
+				"name": "returnToken",
+				"outputs": [],
+				"stateMutability": "payable",
 				"type": "function"
 			},
 			{
@@ -165,6 +283,16 @@
 						"internalType": "bool",
 						"name": "raceType",
 						"type": "bool"
+					},
+					{
+						"internalType": "uint256",
+						"name": "numberofHorses",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "begin",
+						"type": "uint256"
 					}
 				],
 				"name": "startRace",
@@ -187,8 +315,33 @@
 			},
 			{
 				"inputs": [],
+				"name": "totalAmount",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
 				"name": "totalUsers",
-				"outputs": [],
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
 				"stateMutability": "view",
 				"type": "function"
 			},
@@ -204,10 +357,44 @@
 				"outputs": [],
 				"stateMutability": "nonpayable",
 				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					},
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "userBet",
+				"outputs": [
+					{
+						"internalType": "enum Main.BET_TYPE",
+						"name": "betType",
+						"type": "uint8"
+					},
+					{
+						"internalType": "uint256",
+						"name": "amount",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "horseNum",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
 			}
 		],
 		"devdoc": {
-			"author": "Aman Kumar",
+			"author": "@amankr1279",
 			"kind": "dev",
 			"methods": {
 				"approveSpending(uint256)": {
@@ -224,8 +411,8 @@
 				"renounceOwnership()": {
 					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
 				},
-				"returnToken()": {
-					"details": "The left amount after sending prize money should be sent to this contract's owner. "
+				"returnToken(address)": {
+					"details": "The left amount after sending prize money should be sent to this contract's myOwner. "
 				},
 				"transferOwnership(address)": {
 					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
@@ -243,11 +430,11 @@
 				"registerUser(uint256,uint256,uint256)": {
 					"notice": "This function registers user in a race."
 				},
-				"returnToken()": {
+				"returnToken(address)": {
 					"notice": "Retuns token to the winners from the creator's account."
 				}
 			},
-			"notice": "It is a single point of contact for carrying all betting operations.",
+			"notice": "It is a single point of contact for carrying out all betting operations.",
 			"version": 1
 		}
 	},
@@ -500,27 +687,27 @@
 			]
 		},
 		"hardhat/console.sol": {
-			"keccak256": "0x60b0215121bf25612a6739fb2f1ec35f31ee82e4a8216c032c8243d904ab3aa9",
+			"keccak256": "0x7434453e6d3b7d0e5d0eb7846ffdbc27f0ccf3b163591263739b628074dc103a",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://6e29880d33dd479bb046ba306993d26ccb779a4b1d94a046cb3567f22948bb4d",
-				"dweb:/ipfs/QmfTY1qzPt5C63Wc7y6JqfZr5899NRvXYdCpyLzR5FXQic"
+				"bzz-raw://49355f780520494d1d5a0f01858385e51bb5280ce0ecfb960f16995065dca395",
+				"dweb:/ipfs/QmSwJ6C5QLz6xKeQZS8wbwjU1KxRFTYfwbGmtzisd5sRW4"
 			]
 		},
 		"main.sol": {
-			"keccak256": "0x46a98b4a3d1e116d0f3da5a8cadc8fd75a500f32aefce087169b983fb54f7e9e",
+			"keccak256": "0xdc4b996142e88888fae9ea866aa34342dfa4f8917944a4cf2bb475b8e1640a04",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://5adc47a30b54e62f3687afde4e5cc1c88e96b598dfe3be4292bdf3f9cf288ca5",
-				"dweb:/ipfs/QmZTogN1EHa79VPYUVaudBsVqNN5QEiNXQM54tebduiNhj"
+				"bzz-raw://ca29adb8c32310b176add8e2dedd8a0035b59bd1f19bf44b8b6c7aca1a1667d8",
+				"dweb:/ipfs/QmXXkTCmbiZfFfGYkFw9X1D2keJrYDT4ovYCLrhWYMxESf"
 			]
 		},
-		"storage.sol": {
-			"keccak256": "0xafb0c8f78e6c90490090e0de4c4e530dbfec574c76eceff37f93f0e333d926fd",
+		"service.sol": {
+			"keccak256": "0x0d74cc6f6fcba0f66345bbcdae45c657d6a214603a412a0780dbe0137304e0b0",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ec7e3f86f752f74c9dd74210fdd18f0c01c10c3338fe8d376600288398314e0a",
-				"dweb:/ipfs/QmeU3F1Jp9ieVaHGVXrRXGH3wEyiC473zZwSb1juj71euX"
+				"bzz-raw://c2f32cb44e199981e146b6cbf951364a66e5158ff20f00b945f352211ad46158",
+				"dweb:/ipfs/QmZW4iFaMkGzXiaecXGy4FBsKyA3SF5vsfPpgbuyfFsej5"
 			]
 		},
 		"token.sol": {
