@@ -6,25 +6,6 @@
 	"output": {
 		"abi": [
 			{
-				"anonymous": false,
-				"inputs": [
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "previousOwner",
-						"type": "address"
-					},
-					{
-						"indexed": true,
-						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "OwnershipTransferred",
-				"type": "event"
-			},
-			{
 				"inputs": [],
 				"name": "HORSES",
 				"outputs": [
@@ -211,19 +192,6 @@
 			},
 			{
 				"inputs": [],
-				"name": "owner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
 				"name": "raceExecution",
 				"outputs": [],
 				"stateMutability": "nonpayable",
@@ -250,13 +218,6 @@
 				"name": "registerUser",
 				"outputs": [],
 				"stateMutability": "payable",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "renounceOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
 				"type": "function"
 			},
 			{
@@ -349,19 +310,6 @@
 				"inputs": [
 					{
 						"internalType": "address",
-						"name": "newOwner",
-						"type": "address"
-					}
-				],
-				"name": "transferOwnership",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "address",
 						"name": "",
 						"type": "address"
 					},
@@ -400,22 +348,13 @@
 				"approveSpending(uint256)": {
 					"details": "Not working. Need to check the reason"
 				},
-				"owner()": {
-					"details": "Returns the address of the current owner."
-				},
 				"registerUser(uint256,uint256,uint256)": {
 					"params": {
 						"_betAmount": ", _horse, _betType  All tokens are sent to this contract's address as pool for prizemoney. // TODO : Send the user an NFT when he places the bet"
 					}
 				},
-				"renounceOwnership()": {
-					"details": "Leaves the contract without owner. It will not be possible to call `onlyOwner` functions. Can only be called by the current owner. NOTE: Renouncing ownership will leave the contract without an owner, thereby disabling any functionality that is only available to the owner."
-				},
 				"returnToken(address)": {
 					"details": "The left amount after sending prize money should be sent to this contract's myOwner. "
-				},
-				"transferOwnership(address)": {
-					"details": "Transfers ownership of the contract to a new account (`newOwner`). Can only be called by the current owner."
 				}
 			},
 			"title": "Main handler of all betting operations.",
@@ -695,19 +634,19 @@
 			]
 		},
 		"main.sol": {
-			"keccak256": "0xdc4b996142e88888fae9ea866aa34342dfa4f8917944a4cf2bb475b8e1640a04",
+			"keccak256": "0xe42586281ddea24fdf0c9523c3ce37eb187e7f87df94b69284786d5683e1804d",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ca29adb8c32310b176add8e2dedd8a0035b59bd1f19bf44b8b6c7aca1a1667d8",
-				"dweb:/ipfs/QmXXkTCmbiZfFfGYkFw9X1D2keJrYDT4ovYCLrhWYMxESf"
+				"bzz-raw://81ed851c20c527f5f5f26e9688e2eebcb72016086b3317cc4311d296f7efc3c8",
+				"dweb:/ipfs/QmZsZpKuMLDtWuaRkKDB9C1wJa5eRzXqiXEEAXk6w5bc8m"
 			]
 		},
 		"service.sol": {
-			"keccak256": "0x0d74cc6f6fcba0f66345bbcdae45c657d6a214603a412a0780dbe0137304e0b0",
+			"keccak256": "0xa09dcd236b908651cff40d830fc551e473394d29e2c962a42ee9b71bf50abe66",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://c2f32cb44e199981e146b6cbf951364a66e5158ff20f00b945f352211ad46158",
-				"dweb:/ipfs/QmZW4iFaMkGzXiaecXGy4FBsKyA3SF5vsfPpgbuyfFsej5"
+				"bzz-raw://07f557c1dfd0d55d80a16aa78e9204a2be8ab7cc8d228e79da24daeb49ac0195",
+				"dweb:/ipfs/QmbgqCbApwpiN7xeqGtrTeQTNzWoy9q3qMcwawkue2zLKd"
 			]
 		},
 		"token.sol": {

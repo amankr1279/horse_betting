@@ -11,9 +11,10 @@ import "./service.sol";
 /// @author @amankr1279
 /// @notice It is a single point of contact for carrying out all betting operations.
 
-contract Main is Ownable {
-    address public tokenAddress = 0x86c3259c19f69D64634d0D7297B52CF299cab74d;
-    address public myOwner = 0x5B38Da6a701c568545dCfcB03FcB875f56beddC4;
+contract Main {
+    address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
+    Horse_Bet token = Horse_Bet(tokenAddress);
+    address public myOwner = token.owner(); // we can use token owner
 
     //**************** Storage vars ***********************//
     enum RACE_TYPE {
@@ -72,12 +73,12 @@ contract Main is Ownable {
 
     // this method ensures that a logic is implemented only after payment.
     function accept(uint256 amount, address _token) external {
-        IERC20 token = IERC20(_token);
+        IERC20 token1 = IERC20(_token);
         require(
-            token.allowance(msg.sender, address(this)) >= amount,
+            token1.allowance(msg.sender, address(this)) >= amount,
             "you have to approve control of tokens"
         );
-        token.transferFrom(msg.sender, address(this), amount);
+        token1.transferFrom(msg.sender, address(this), amount);
         //logic starts
     }
 
@@ -104,7 +105,7 @@ contract Main is Ownable {
     /// @dev Not working. Need to check the reason
     /// @notice Approve spending by this contract
     function approveSpending(uint _amount) public {
-        Horse_Bet token = Horse_Bet(tokenAddress);
+        // Horse_Bet token = Horse_Bet(tokenAddress);
         token.approve(address(this), _amount);
     }
 
@@ -115,7 +116,7 @@ contract Main is Ownable {
     */
     function registerUser(uint _betAmount, uint _horse, uint _betType) public payable {
         // approve the transfer
-        Horse_Bet token = Horse_Bet(tokenAddress);
+        // Horse_Bet token = Horse_Bet(tokenAddress);
         console.log("Before transfer");
         require(
             token.allowance(msg.sender, address(this)) >= _betAmount,
@@ -156,7 +157,7 @@ contract Main is Ownable {
     @dev The left amount after sending prize money should be sent to this contract's myOwner. 
     */
     function returnToken(address user) external payable{
-        Horse_Bet token = Horse_Bet(tokenAddress);
+        // Horse_Bet token = Horse_Bet(tokenAddress);
         Bet[] memory bets = userBet[user];
         uint amt = 0;
         uint position = 0;
