@@ -2,10 +2,11 @@
 pragma solidity ^0.8.10;
 
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
-import "./token.sol";
-import "./service.sol";
+import "token.sol";
+import "service.sol";
+import "nft.sol";
 
-// import "hardhat/console.sol";
+import "hardhat/console.sol";
 
 /// @title Main handler of all betting operations.
 /// @author @amankr1279
@@ -13,8 +14,10 @@ import "./service.sol";
 
 contract Main {
     address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
+    address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
     Horse_Bet token = Horse_Bet(tokenAddress);
-    address public myOwner = token.owner(); // we can use token owner
+    BetReceipt receipt = BetReceipt(nftAddress);
+    address public myOwner = token.owner(); 
 
     //**************** Storage vars ***********************//
     enum RACE_TYPE {
@@ -36,36 +39,23 @@ contract Main {
 
     struct Race {
         string name;
-        RACE_TYPE raceType;
+        RACE_TYPE raceType; // should be removed as it is useless
         uint startTime;
         uint raceId;
         uint locationId;
+        uint numHorses;
         uint first;
         uint runner;
         uint third;
     }
 
     mapping(address => Bet[]) public userBet;
-    mapping(uint => address[]) public horseBettor; 
     address[] public totalUsers;
-    uint public totalAmount;
-    uint public immutable HORSES = 5; // mutable in future
 
     // Race[] public raceList;
     Race public currentRace;
 
-    // prize Money for each user
-    mapping(address => uint) public Loot;
-
     // ************************* End storage vars ***************//
-
-    // function getHorseBettors(uint horse) view external returns (address[]){
-    //     return horseBettor[horse];
-    // }
-
-    // function getLoot(address userAddress) view external returns (address){
-    //     return Loot[userAddress];
-    // }
 
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -88,14 +78,10 @@ contract Main {
         for (uint i = 0; i < totalUsers.length; i++) {
             delete userBet[totalUsers[i]];
         }
-        for (uint i = 0; i < HORSES; i++) {
-            delete horseBettor[i];
-        }
 
         totalUsers = new address[](0);
-        totalAmount = 0;
         // delete raceList;
-        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes,1,1,0,0,0 );
+        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes,1,1,numberofHorses,0,0,0 );
         if (raceType == true) {
             currentRace.raceType = RACE_TYPE.EUROPEAN;
         }
@@ -105,18 +91,16 @@ contract Main {
     /// @dev Not working. Need to check the reason
     /// @notice Approve spending by this contract
     function approveSpending(uint _amount) public {
-        // Horse_Bet token = Horse_Bet(tokenAddress);
         token.approve(address(this), _amount);
     }
 
     /** @notice This function registers user in a race.
     @param _betAmount, _horse, _betType 
     All tokens are sent to this contract's address as pool for prizemoney.
-    // TODO : Send the user an NFT when he places the bet
+    // Send the user an NFT when he places the bet as an acknowledgment
     */
     function registerUser(uint _betAmount, uint _horse, uint _betType) public payable {
         // approve the transfer
-        // Horse_Bet token = Horse_Bet(tokenAddress);
         console.log("Before transfer");
         require(
             token.allowance(msg.sender, address(this)) >= _betAmount,
@@ -136,10 +120,8 @@ contract Main {
         }
         Bet memory bet = Bet(x, _betAmount, _horse);
         userBet[msg.sender].push(bet);
-        totalAmount += _betAmount;
         totalUsers.push(msg.sender);
-        horseBettor[_horse].push(msg.sender);
-        // send an NFT to the bettor as an acknowledgement
+        receipt.mintTokens();
 
         console.log("Balance address myOwner: %s", token.balanceOf(myOwner));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
@@ -147,18 +129,17 @@ contract Main {
 
     function raceExecution() public {
         Service service = new Service();
-        (uint h1, uint h2, uint h3) = service.getRaceWinners(HORSES);
+        (uint h1, uint h2, uint h3) = service.getRaceWinners(currentRace.numHorses);
         currentRace.first = h1;
         currentRace.runner = h2;
         currentRace.third = h3;
     }
     /**
-    @notice Retuns token to the winners from the creator's account.
-    @dev The left amount after sending prize money should be sent to this contract's myOwner. 
+    @notice Retuns token to the winners from the owner's account.
+    @dev The left amount after sending prize money stays with the contract's owner. 
     */
-    function returnToken(address user) external payable{
-        // Horse_Bet token = Horse_Bet(tokenAddress);
-        Bet[] memory bets = userBet[user];
+    function returnToken() external payable{
+        Bet[] memory bets = userBet[msg.sender];
         uint amt = 0;
         uint position = 0;
         for (uint i= 0; i < bets.length; i++) 
@@ -166,19 +147,20 @@ contract Main {
             Bet memory bet = bets[i];
             position = findPos(bet.horseNum);
             if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
-                amt += bet.amount * 6;
+                amt += bet.amount * 4;
             } 
             if(bet.betType == BET_TYPE.SHOW && position <= 2) {
-                amt += bet.amount * 4;
+                amt += bet.amount * 3;
             } 
             if(bet.betType == BET_TYPE.PLACE && position <= 3){
                 amt += bet.amount * 2;
             }
         }
-        token.transferFrom(myOwner, user, amt);
-        console.log("Sender : ", myOwner); // --> myOwner of token contract
-        console.log("Receiver this : ", user); // -> main.sol's address
-        console.log("Balance: %s", token.balanceOf(user));
+        token.transferFrom(myOwner, msg.sender, amt);
+        receipt.burnTokens();
+        console.log("Sender : ", myOwner); 
+        console.log("Receiver this : ", msg.sender); 
+        console.log("Balance: %s", token.balanceOf(msg.sender));
     }
 
     function findPos(uint h) public view returns (uint){
