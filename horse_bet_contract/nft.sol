@@ -10,6 +10,7 @@ contract BetReceipt is ERC721, ERC721Burnable, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _tokenIdCounter;
+    mapping(address => uint) public walletMints;
 
     constructor() ERC721("BetReceipt", "BETR") {}
 
@@ -17,5 +18,16 @@ contract BetReceipt is ERC721, ERC721Burnable, Ownable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+    }
+
+    function mintTokens() public {
+        walletMints[msg.sender] +=1;
+    }
+    function burnTokens() public payable  {
+        require(walletMints[msg.sender] > 0, "No token minted for this address");
+        walletMints[msg.sender] = 0;
+    }
+    function getWalletMints() view public returns (uint) {
+        return walletMints[msg.sender];
     }
 }
