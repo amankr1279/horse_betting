@@ -11,13 +11,36 @@ import "hardhat/console.sol";
 /// @title Main handler of all betting operations.
 /// @author @amankr1279
 /// @notice It is a single point of contact for carrying out all betting operations.
+contract OwnershipManager {
+    address private _owner;
+    constructor() {
+        _owner = msg.sender;
+    }
 
-contract Main {
+    function getOwner() public view returns(address) {
+        return _owner;
+    }
+
+    function isOwner() internal view returns (bool)  {
+        return msg.sender == _owner;
+    }
+
+    modifier ownerOnly () {
+        require(isOwner(), "Only owner is allowed to execute this function");
+        _;
+    }
+    modifier noOwner() {
+        require(!isOwner(),"Owner not allowed to execute this function.");
+        _;
+    }
+}
+
+contract Main is OwnershipManager {
     address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
     address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
     Horse_Bet token = Horse_Bet(tokenAddress);
     BetReceipt receipt = BetReceipt(nftAddress);
-    address public myOwner = token.owner(); 
+    address public myOwner; 
 
     //**************** Storage vars ***********************//
     enum RACE_TYPE {
@@ -50,13 +73,15 @@ contract Main {
     }
 
     mapping(address => Bet[]) public userBet;
-    address[] public totalUsers;
+    address[] public totalUsers; // only for debugging, not much requirement
 
     // Race[] public raceList;
     Race public currentRace;
 
     // ************************* End storage vars ***************//
-
+    constructor() {
+        myOwner = getOwner();
+    }
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
     }
@@ -73,8 +98,10 @@ contract Main {
     }
 
 
-    function startRace(string memory raceName, bool raceType, uint numberofHorses, uint begin) public payable {
+    function startRace(string memory raceName, bool raceType, uint numberofHorses, uint begin) public payable ownerOnly  {
         // console.log("Balance address this: %s", token.balanceOf(address(this)));
+        require(numberofHorses >= 3, "Not enough horses conducting a race");
+        require(begin >= 100, "Date should be in future");
         for (uint i = 0; i < totalUsers.length; i++) {
             delete userBet[totalUsers[i]];
         }
@@ -99,7 +126,8 @@ contract Main {
     All tokens are sent to this contract's address as pool for prizemoney.
     // Send the user an NFT when he places the bet as an acknowledgment
     */
-    function registerUser(uint _betAmount, uint _horse, uint _betType) public payable {
+    function registerUser(uint _betAmount, uint _horse, uint _betType) public payable noOwner {
+        require(msg.sender != myOwner, "Owner cannot bet in a race");
         // approve the transfer
         console.log("Before transfer");
         require(
@@ -127,7 +155,8 @@ contract Main {
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
 
-    function raceExecution() public {
+    function raceExecution() public ownerOnly {
+        require((currentRace.first == 0) && (currentRace.runner == 0) && (currentRace.third == 0), "Race is already completed");
         Service service = new Service();
         (uint h1, uint h2, uint h3) = service.getRaceWinners(currentRace.numHorses);
         currentRace.first = h1;
