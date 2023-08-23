@@ -21,22 +21,29 @@ contract Service {
         uint h1 = random(HORSES);
         uint h2 = random(HORSES);
         uint h3 = random(HORSES);
-        while (h2 == h1) 
-        {
-            h2 = random(HORSES);
-        }
-        while (h3 == h2) 
-        {
-            h3 = random(HORSES);
-        }
-        while (h3 == h1) 
-        {
-            h3 = random(HORSES);
+        if (HORSES <= 7) {
+            h1 = 1;
+            h2 = 2;
+            h3 = 3;
+        } 
+        else {
+            while (h2 == h1) 
+            {
+                h2 = random(HORSES);
+            }
+            while (h3 == h2) 
+            {
+                h3 = random(HORSES);
+            }
+            while (h3 == h1) 
+            {
+                h3 = random(HORSES);
+            }
         }
 
         return( h1, h2, h3);
     }
-
+    
 }
 /*
 Need functions like:-
