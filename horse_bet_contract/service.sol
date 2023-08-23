@@ -47,13 +47,6 @@ contract Service {
 }
 /*
 Need functions like:-
-1. reset race. Done
-2. duplicate entries should not be there. 
-3. limit max tokens that can be hedged in a race. --> 500 Done but check not working in main.sol
-4. Main.sol must have 10,000 tokens to begin with and it will transfer the prize money to winner Done
-5. if pick winner returns "0x00" then rerun the pickWinner Done
-6. Winner picking needs some modification.
-7. Number of horses should be alterable.
 8. Multiple races should be hosted at once.
 9. Time check is still pending.
 */
