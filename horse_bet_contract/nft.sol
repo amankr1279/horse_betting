@@ -24,7 +24,7 @@ contract BetReceipt is ERC721, ERC721Burnable, Ownable {
         walletMints[msg.sender] +=1;
     }
     function burnTokens() public payable  {
-        require(walletMints[msg.sender] > 0, "No token minted for this address");
+        require(walletMints[msg.sender] > 0, "No receipts for this address");
         walletMints[msg.sender] = 0;
     }
     function getWalletMints() view public returns (uint) {
