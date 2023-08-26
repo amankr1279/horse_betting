@@ -6,6 +6,11 @@
 	"output": {
 		"abi": [
 			{
+				"inputs": [],
+				"stateMutability": "nonpayable",
+				"type": "constructor"
+			},
+			{
 				"inputs": [
 					{
 						"internalType": "uint256",
@@ -55,8 +60,127 @@
 				"type": "function"
 			},
 			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "h",
+						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_raceId",
+						"type": "uint256"
+					}
+				],
+				"name": "findPos",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
 				"inputs": [],
-				"name": "currentRace",
+				"name": "getOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					},
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"name": "hasWithdrawn",
+				"outputs": [
+					{
+						"internalType": "bool",
+						"name": "",
+						"type": "bool"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "myOwner",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "nftAddress",
+				"outputs": [
+					{
+						"internalType": "address",
+						"name": "",
+						"type": "address"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_raceId",
+						"type": "uint256"
+					}
+				],
+				"name": "raceExecution",
+				"outputs": [],
+				"stateMutability": "nonpayable",
+				"type": "function"
+			},
+			{
+				"inputs": [],
+				"name": "raceId",
+				"outputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"stateMutability": "view",
+				"type": "function"
+			},
+			{
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "",
+						"type": "uint256"
+					}
+				],
+				"name": "raceList",
 				"outputs": [
 					{
 						"internalType": "string",
@@ -111,58 +235,6 @@
 				"inputs": [
 					{
 						"internalType": "uint256",
-						"name": "h",
-						"type": "uint256"
-					}
-				],
-				"name": "findPos",
-				"outputs": [
-					{
-						"internalType": "uint256",
-						"name": "",
-						"type": "uint256"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "myOwner",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "nftAddress",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [],
-				"name": "raceExecution",
-				"outputs": [],
-				"stateMutability": "nonpayable",
-				"type": "function"
-			},
-			{
-				"inputs": [
-					{
-						"internalType": "uint256",
 						"name": "_betAmount",
 						"type": "uint256"
 					},
@@ -175,6 +247,11 @@
 						"internalType": "uint256",
 						"name": "_betType",
 						"type": "uint256"
+					},
+					{
+						"internalType": "uint256",
+						"name": "_raceId",
+						"type": "uint256"
 					}
 				],
 				"name": "registerUser",
@@ -183,7 +260,13 @@
 				"type": "function"
 			},
 			{
-				"inputs": [],
+				"inputs": [
+					{
+						"internalType": "uint256",
+						"name": "_raceId",
+						"type": "uint256"
+					}
+				],
 				"name": "returnToken",
 				"outputs": [],
 				"stateMutability": "payable",
@@ -236,21 +319,7 @@
 						"internalType": "uint256",
 						"name": "",
 						"type": "uint256"
-					}
-				],
-				"name": "totalUsers",
-				"outputs": [
-					{
-						"internalType": "address",
-						"name": "",
-						"type": "address"
-					}
-				],
-				"stateMutability": "view",
-				"type": "function"
-			},
-			{
-				"inputs": [
+					},
 					{
 						"internalType": "address",
 						"name": "",
@@ -285,22 +354,20 @@
 			}
 		],
 		"devdoc": {
-			"author": "@amankr1279",
 			"kind": "dev",
 			"methods": {
 				"approveSpending(uint256)": {
 					"details": "Not working. Need to check the reason"
 				},
-				"registerUser(uint256,uint256,uint256)": {
+				"registerUser(uint256,uint256,uint256,uint256)": {
 					"params": {
 						"_betAmount": ", _horse, _betType  All tokens are sent to this contract's address as pool for prizemoney. // Send the user an NFT when he places the bet as an acknowledgment"
 					}
 				},
-				"returnToken()": {
+				"returnToken(uint256)": {
 					"details": "The left amount after sending prize money stays with the contract's owner. "
 				}
 			},
-			"title": "Main handler of all betting operations.",
 			"version": 1
 		},
 		"userdoc": {
@@ -309,14 +376,13 @@
 				"approveSpending(uint256)": {
 					"notice": "Approve spending by this contract"
 				},
-				"registerUser(uint256,uint256,uint256)": {
+				"registerUser(uint256,uint256,uint256,uint256)": {
 					"notice": "This function registers user in a race."
 				},
-				"returnToken()": {
+				"returnToken(uint256)": {
 					"notice": "Retuns token to the winners from the owner's account."
 				}
 			},
-			"notice": "It is a single point of contact for carrying out all betting operations.",
 			"version": 1
 		}
 	},
@@ -330,7 +396,7 @@
 			"bytecodeHash": "ipfs"
 		},
 		"optimizer": {
-			"enabled": true,
+			"enabled": false,
 			"runs": 200
 		},
 		"remappings": []
@@ -641,27 +707,27 @@
 			]
 		},
 		"main.sol": {
-			"keccak256": "0xf838a9153851309b3fd38d3a00ee07bcd9f06c2567306d83d211cbe92becb75b",
+			"keccak256": "0xd0e4c6ff12c3bb7e65913560906dc5a06f1faa49c686e408c230f46bcb0e15c2",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://85dcfa717623440534ca8c6ef8054f21f55dc92b918f04a91d54f6da8b9f3c6c",
-				"dweb:/ipfs/QmUcHjsSvW4LtMBAoTZqsdE9aNohqUnTaMgzP5Kjs3wpdn"
+				"bzz-raw://ef9f645f38e02e943c48156918ba79e6dbc108f134ec5dba6f4a28c59f1d924d",
+				"dweb:/ipfs/QmeH3zD3vko9RB67Pv4M98sSgp8d2uDGyLQXLfzyMDrZgo"
 			]
 		},
 		"nft.sol": {
-			"keccak256": "0xc76fadbd4ad3380ba9fbb9fdf7078b1e29ca51b487d810b1ccb0bfdb975f376a",
+			"keccak256": "0x8647085695014c5d6a0efde8a0647137e04b92efaf151b350ccf28810ac55d87",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://e6fdf3b5c81825f083cca9e36081235e2e18bcadf68272218a1769f99faa5c82",
-				"dweb:/ipfs/Qmf5Ej2fvdCoicSQLftYUsSM1U9u5HSt5c6EtNL2bRZzwK"
+				"bzz-raw://0737e1bb06cb4f786428af6458138b75e1c65724401b0df2e2a8f52da1802e74",
+				"dweb:/ipfs/QmfPVcREY9ZW3aYtkeg6UKrio1EGRZFy1ddodtoJi9uw1b"
 			]
 		},
 		"service.sol": {
-			"keccak256": "0x217df42a4a3556f8ca4d4949efd8cb3d33637eea87cd2d317b4c32c905eec0f9",
+			"keccak256": "0x5c74bd2b3340d38778b8b615ee31cbbe1fe99bcf74327ba054b945e15f7f810b",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://3724e6673d9c6a1f57b487ed49d5c7a28a36386ce9a564e2f50a30f465402957",
-				"dweb:/ipfs/QmVxcre17qChxjUYEj2vmH1gzvsHUxF4W1MPhRDdLEYTbV"
+				"bzz-raw://23e921e79b7a76a74bab7f1989002c23b0cf0a97124fdff72a2988502b5ff8b5",
+				"dweb:/ipfs/QmYhZoGRmh6WNq7eGdPrwzP27TQGHyKDRYBx7SKJuGhLc6"
 			]
 		},
 		"token.sol": {
