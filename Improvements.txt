@@ -1,7 +1,7 @@
 DONE 0. Move all storage vars to main.sol 
 DONE 1. Number of horses should be controllable for a race.
 DONE 2. Deadline check
-3. Hosting multiple races simultaneously.
+DONE 3. Hosting multiple races simultaneously.
 DONE 4. Removal of BETCAP.
 5. Mint tokens in exchange of ethers.
 6. Test on hardhat

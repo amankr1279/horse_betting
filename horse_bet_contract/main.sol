@@ -8,9 +8,9 @@ import "nft.sol";
 
 import "hardhat/console.sol";
 
-/// @title Main handler of all betting operations.
+/// @title Ownership Manager  
 /// @author @amankr1279
-/// @notice It is a single point of contact for carrying out all betting operations.
+/// @notice It defines scopes for each function in contract "Main"
 contract OwnershipManager {
     address private _owner;
     constructor() {
@@ -35,12 +35,16 @@ contract OwnershipManager {
     }
 }
 
+/// @title Main handler of all betting operations.
+/// @author @amankr1279
+/// @notice It is a single point of contact for carrying out all betting operations.
 contract Main is OwnershipManager {
     address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
     address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
     Horse_Bet token = Horse_Bet(tokenAddress);
     BetReceipt receipt = BetReceipt(nftAddress);
     address public myOwner; 
+    uint public raceId;
 
     //**************** Storage vars ***********************//
     enum RACE_TYPE {
@@ -72,15 +76,14 @@ contract Main is OwnershipManager {
         uint third;
     }
 
-    mapping(address => Bet[]) public userBet;
-    address[] public totalUsers; // only for debugging, not much requirement
-
-    // Race[] public raceList;
-    Race public currentRace;
+    mapping (uint => mapping(address => Bet[])) public userBet;
+    mapping (uint => mapping (address => bool)) public hasWithdrawn;
+    mapping (uint => Race) public raceList; // keeping as map as reset is easier
 
     // ************************* End storage vars ***************//
     constructor() {
         myOwner = getOwner();
+        raceId = 0;
     }
     function acceptEther(uint256 amount, address _token) external payable {
         //logic amount = price X msg.value
@@ -97,23 +100,27 @@ contract Main is OwnershipManager {
         //logic starts
     }
 
-
     function startRace(string memory raceName, bool raceType, uint numberofHorses, uint begin) public payable ownerOnly  {
-        // console.log("Balance address this: %s", token.balanceOf(address(this)));
         require(numberofHorses >= 3, "Not enough horses conducting a race");
-        require(begin >= 100, "Date should be in future");
-        for (uint i = 0; i < totalUsers.length; i++) {
-            delete userBet[totalUsers[i]];
-        }
+        require(begin >= block.timestamp, "Date should be in future");
 
-        totalUsers = new address[](0);
-        // delete raceList;
-        currentRace = Race(raceName, RACE_TYPE.NORTH_AMERICAN, block.timestamp + 10 minutes,1,1,numberofHorses,0,0,0 );
+        Race memory currentRace = Race({
+            name: raceName,
+            raceType: RACE_TYPE.NORTH_AMERICAN,
+            startTime: begin,
+            raceId: 0,
+            locationId: 0,
+            numHorses: numberofHorses,
+            first: 0,
+            runner: 0,
+            third: 0
+        });
         if (raceType == true) {
             currentRace.raceType = RACE_TYPE.EUROPEAN;
         }
+        raceId++;
+        raceList[raceId] = currentRace;
     }
-
 
     /// @dev Not working. Need to check the reason
     /// @notice Approve spending by this contract
@@ -126,9 +133,10 @@ contract Main is OwnershipManager {
     All tokens are sent to this contract's address as pool for prizemoney.
     // Send the user an NFT when he places the bet as an acknowledgment
     */
-    function registerUser(uint _betAmount, uint _horse, uint _betType) public payable noOwner {
-        require(msg.sender != myOwner, "Owner cannot bet in a race");
-        // approve the transfer
+    function registerUser(uint _betAmount, uint _horse, uint _betType, uint _raceId) public payable noOwner {
+        Race memory currentRace = raceList[_raceId];
+        require(block.timestamp >= currentRace.startTime, "Cannot register before race's scheduled start time");
+        require((currentRace.first == 0) && (currentRace.runner == 0) && (currentRace.third == 0), "Race is already completed");
         console.log("Before transfer");
         require(
             token.allowance(msg.sender, address(this)) >= _betAmount,
@@ -147,34 +155,42 @@ contract Main is OwnershipManager {
             x = BET_TYPE.SHOW;
         }
         Bet memory bet = Bet(x, _betAmount, _horse);
-        userBet[msg.sender].push(bet);
-        totalUsers.push(msg.sender);
+        userBet[_raceId][msg.sender].push(bet);
+        hasWithdrawn[_raceId][msg.sender] = false;
         receipt.mintTokens();
 
         console.log("Balance address myOwner: %s", token.balanceOf(myOwner));
         console.log("Balance msg sender: %s", token.balanceOf(msg.sender));
     }
 
-    function raceExecution() public ownerOnly {
+    function raceExecution(uint _raceId) public ownerOnly {
+        Race memory currentRace = raceList[_raceId];
+        require(block.timestamp >= currentRace.startTime, "Cannot execute before race's scheduled start time");
         require((currentRace.first == 0) && (currentRace.runner == 0) && (currentRace.third == 0), "Race is already completed");
         Service service = new Service();
         (uint h1, uint h2, uint h3) = service.getRaceWinners(currentRace.numHorses);
         currentRace.first = h1;
         currentRace.runner = h2;
         currentRace.third = h3;
+        raceList[_raceId] = currentRace;
     }
     /**
     @notice Retuns token to the winners from the owner's account.
     @dev The left amount after sending prize money stays with the contract's owner. 
     */
-    function returnToken() external payable{
-        Bet[] memory bets = userBet[msg.sender];
+    function returnToken(uint _raceId) external payable noOwner{
+        Race memory currentRace = raceList[_raceId];
+        require(block.timestamp >= currentRace.startTime, "Cannot retrieve before race's scheduled start time");
+        require((currentRace.first != 0) && (currentRace.runner != 0) && (currentRace.third != 0), "Race is still in execution");
+        // if bet's raceId is matched, then only process and after process, set bet amt = 0 to prevent double witdrawal
+        require(hasWithdrawn[_raceId][msg.sender] == false, "Alreday withdrawn tokens, cannot do again");
+        Bet[] memory bets = userBet[_raceId][msg.sender];
         uint amt = 0;
         uint position = 0;
         for (uint i= 0; i < bets.length; i++) 
         {
             Bet memory bet = bets[i];
-            position = findPos(bet.horseNum);
+            position = findPos(bet.horseNum, _raceId);
             if (bet.betType == BET_TYPE.STRAIGHT && position == 1) {
                 amt += bet.amount * 4;
             } 
@@ -185,6 +201,10 @@ contract Main is OwnershipManager {
                 amt += bet.amount * 2;
             }
         }
+        // to prevent double withdrawal
+        if(bets.length > 0) {
+            hasWithdrawn[_raceId][msg.sender] = true;
+        }
         token.transferFrom(myOwner, msg.sender, amt);
         receipt.burnTokens();
         console.log("Sender : ", myOwner); 
@@ -192,7 +212,8 @@ contract Main is OwnershipManager {
         console.log("Balance: %s", token.balanceOf(msg.sender));
     }
 
-    function findPos(uint h) public view returns (uint){
+    function findPos(uint h, uint _raceId) public view returns (uint){
+        Race memory currentRace = raceList[_raceId];
         if (h == currentRace.first) {
             return 1;
         } 
@@ -202,7 +223,7 @@ contract Main is OwnershipManager {
         if (h == currentRace.third) {
             return 3;
         }
-        return 0;
+        return 1000;
     }
 
 }
@@ -218,7 +239,3 @@ contract Main is OwnershipManager {
 // Token contract:- 0xd9145CCE52D386f254917e481eB44e9943F39138
 // Storage contract:- 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8
 // 18 zeroes:- 000000000000000000
-
-// update the transferFrom works only is the sender is "msg.sender" but we need to deduct from the added user's account. --> Resolved
-
-// TODO: Transfrom this from a single race to multiple races

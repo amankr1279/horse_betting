@@ -45,11 +45,3 @@ contract Service {
     }
     
 }
-/*
-Need functions like:-
-8. Multiple races should be hosted at once.
-9. Time check is still pending.
-*/
-
-// Loops are costly, try maps.
-// transaction fn should not have loops, put them in view type
