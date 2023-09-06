@@ -354,6 +354,7 @@
 			}
 		],
 		"devdoc": {
+			"author": "@amankr1279",
 			"kind": "dev",
 			"methods": {
 				"approveSpending(uint256)": {
@@ -368,6 +369,7 @@
 					"details": "The left amount after sending prize money stays with the contract's owner. "
 				}
 			},
+			"title": "Main handler of all betting operations.",
 			"version": 1
 		},
 		"userdoc": {
@@ -383,6 +385,7 @@
 					"notice": "Retuns token to the winners from the owner's account."
 				}
 			},
+			"notice": "It is a single point of contact for carrying out all betting operations.",
 			"version": 1
 		}
 	},
@@ -707,11 +710,11 @@
 			]
 		},
 		"main.sol": {
-			"keccak256": "0xd0e4c6ff12c3bb7e65913560906dc5a06f1faa49c686e408c230f46bcb0e15c2",
+			"keccak256": "0x0fc973054cd6432b37f0db4be0302b0a7012dd7541aaefd5eafb9276961f1851",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://ef9f645f38e02e943c48156918ba79e6dbc108f134ec5dba6f4a28c59f1d924d",
-				"dweb:/ipfs/QmeH3zD3vko9RB67Pv4M98sSgp8d2uDGyLQXLfzyMDrZgo"
+				"bzz-raw://01a46a9b64f5a68745a85fff4e7d2801dc778bfedaa60f54fbf05753b2597ea6",
+				"dweb:/ipfs/QmWAkQ7phM5GjBog4a4gAbAk1QB41i7bSXWF3di1H6ARGm"
 			]
 		},
 		"nft.sol": {
@@ -723,11 +726,11 @@
 			]
 		},
 		"service.sol": {
-			"keccak256": "0x5c74bd2b3340d38778b8b615ee31cbbe1fe99bcf74327ba054b945e15f7f810b",
+			"keccak256": "0x3cb21243eb34516386878e85d4879d4bf378bfe150084a28958f371c70269497",
 			"license": "MIT",
 			"urls": [
-				"bzz-raw://23e921e79b7a76a74bab7f1989002c23b0cf0a97124fdff72a2988502b5ff8b5",
-				"dweb:/ipfs/QmYhZoGRmh6WNq7eGdPrwzP27TQGHyKDRYBx7SKJuGhLc6"
+				"bzz-raw://4c948d3ada7e1d0eb4a91e6bf9d5e008264f8ae449e2795037dd016ae2e185e6",
+				"dweb:/ipfs/Qmbfj7HNDzCvf1tEN5bLSSh5vdP5VD74RZjjBWPWyqW5PE"
 			]
 		},
 		"token.sol": {

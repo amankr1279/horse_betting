@@ -39,8 +39,8 @@ contract OwnershipManager {
 /// @author @amankr1279
 /// @notice It is a single point of contact for carrying out all betting operations.
 contract Main is OwnershipManager {
-    address public tokenAddress = 0xd9145CCE52D386f254917e481eB44e9943F39138;
-    address public nftAddress = 0xd8b934580fcE35a11B58C6D73aDeE468a2833fa8;
+    address public tokenAddress = 0x28E4AaC535F81b9e79446a0Eb4Bc88c60A699c2d;
+    address public nftAddress = 0x2dDC9D257F78C001f45569737278744B89e3206e;
     Horse_Bet token = Horse_Bet(tokenAddress);
     BetReceipt receipt = BetReceipt(nftAddress);
     address public myOwner; 
